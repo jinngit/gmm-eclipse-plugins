@@ -32,7 +32,8 @@ public class GMMCompileHandler extends GMMAbstractHandler {
 		MessageDialog.openInformation(window.getShell(),
 				"GenMyModel Engine Connector", "Compilation");
 
-		System.out.println("PROJECT " + extractProject());
+		System.out.println("PROJECT " + getGMMProject().getCodegenFolder());
+		System.out.println("TMP FOLDER " +  GMMAbstractHandler.systemTmpFolder);
 
 		return null;
 	}

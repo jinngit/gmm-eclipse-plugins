@@ -1,5 +1,7 @@
 package org.genmymodel.engine.connector.handlers;
 
+import java.io.File;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -9,6 +11,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.genmymodel.engine.connector.project.IGenMyModelProject;
 
 /**
  * This class provides some access primitive that helps handling projects,
@@ -20,6 +23,11 @@ import org.eclipse.ui.handlers.HandlerUtil;
 public abstract class GMMAbstractHandler extends AbstractHandler {
 
 	protected ExecutionEvent currentEvent;
+	protected static File systemTmpFolder;
+	
+	static {
+		systemTmpFolder = new File(System.getProperty("java.io.tmpdir"));
+	}
 
 	/**
 	 * Gets the stored current event.
@@ -78,6 +86,10 @@ public abstract class GMMAbstractHandler extends AbstractHandler {
 	 */
 	protected IProject extractProject() {
 		return extractSelection().getProject();
+	}
+	
+	protected IGenMyModelProject getGMMProject() {
+		return new IGenMyModelProject(extractProject());
 	}
 
 }
