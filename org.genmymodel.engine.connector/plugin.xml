@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="GMMEngineCategory"
+            name="GenMyModel Engine Connector">
+      </category>
+      <command
+            categoryId="GMMEngineCategory"
+            defaultHandler="org.genmymodel.engine.connector.handlers.GMMCompileHandler"
+            id="gmmCustomCompile"
+            name="CompileCommand">
+      </command>
+      <command
+            categoryId="GMMEngineCategory"
+            defaultHandler="org.genmymodel.engine.connector.handlers.GMMLaunchHandler"
+            id="gmmCustomLaunch"
+            name="LaunchCommand">
+      </command>
+      <command
+            categoryId="GMMEngineCategory"
+            defaultHandler="org.genmymodel.engine.connector.handlers.GMMCompileLaunchHandler"
+            id="gmmCustomCompileLaunch"
+            name="CompileLaunchCommand">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="true"
+            locationURI="popup:org.eclipse.jdt.ui.PackageExplorer">
+         <menu
+               label="GenMyModel">
+            <command
+                  commandId="gmmCustomCompile"
+                  label="Compile"
+                  style="push">
+            </command>
+            <command
+                  commandId="gmmCustomLaunch"
+                  label="Launch"
+                  style="push">
+            </command>
+            <command
+                  commandId="gmmCustomCompileLaunch"
+                  label="Compile and Launch"
+                  style="push">
+            </command>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            allPopups="true"
+            locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=additions">
+         <menu
+               label="GenMyModel">
+            <command
+                  commandId="gmmCustomCompile"
+                  label="Compile"
+                  style="push">
+            </command>
+            <command
+                  commandId="gmmCustomLaunch"
+                  label="Launch"
+                  style="push">
+            </command>
+            <command
+                  commandId="gmmCustomCompileLaunch"
+                  label="Compile and Launch"
+                  style="push">
+            </command>
+         </menu>
+      </menuContribution>
+   </extension>
+
+</plugin>
