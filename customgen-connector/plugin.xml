@@ -75,5 +75,38 @@
          </menu>
       </menuContribution>
    </extension>
+   <extension
+      id="wizard"
+      name="Project"
+      point="org.eclipse.ui.newWizards">
+   <category
+         name="Project Wizards"
+         id="wizard.category">
+   </category>
+   <wizard
+         name="List of projects"
+         icon="icons/wizard.gif"
+         category="wizard.category"
+         class="org.genmymodel.engine.connector.wizards.GMMProject"
+         id="wizard.wizard">
+      <description>
+      	Project choices
+      </description>
+   </wizard>
+</extension>
+
+<extension
+      point="org.eclipse.ui.popupMenus">
+   <objectContribution
+         objectClass="org.eclipse.core.resources.IFolder"
+         id="org.genmymodel.engine.connector.wizards.popup">
+      <action
+            label="List of projects"
+            icon="icons/action.gif"
+            class="org.genmymodel.engine.connector.wizards.ProjectAction"
+            id="wizard.action">
+      </action>
+   </objectContribution>
+</extension>
 
 </plugin>
