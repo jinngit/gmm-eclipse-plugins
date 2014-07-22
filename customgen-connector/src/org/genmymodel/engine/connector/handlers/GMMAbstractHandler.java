@@ -23,7 +23,7 @@ import org.genmymodel.engine.connector.project.IGenMyModelProject;
 public abstract class GMMAbstractHandler extends AbstractHandler {
 
 	protected ExecutionEvent currentEvent;
-	protected static File systemTmpFolder;
+	public static File systemTmpFolder;
 	
 	static {
 		systemTmpFolder = new File(System.getProperty("java.io.tmpdir"));

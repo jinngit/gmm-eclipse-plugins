@@ -1,7 +1,6 @@
 package org.genmymodel.engine.connector.project;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.nio.file.Files;
 
@@ -11,8 +10,6 @@ import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.util.Zip4jConstants;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.FileFilterUtils;
-import org.apache.commons.io.filefilter.IOFileFilter;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -82,14 +79,27 @@ public class IGenMyModelProject {
 	
 	public File zipMe() throws IOException, ZipException {
 		File tmpFolder = Files.createTempDirectory("GMM-").toFile();
-		File destFolder = new File(tmpFolder.getAbsolutePath() + "/" + getIProject().getName());
+		String destFolder = tmpFolder.getAbsolutePath() + "/" + getIProject().getName();
 		
+		/*
 		IOFileFilter genXMLFile = FileFilterUtils.and(FileFilterUtils.fileFileFilter(), FileFilterUtils.nameFileFilter(GENERATOR_XML));
 		IOFileFilter codegenFile = FileFilterUtils.and(FileFilterUtils.directoryFileFilter(), FileFilterUtils.nameFileFilter(CODEGEN_FOLDER));
 		IOFileFilter mmFile = FileFilterUtils.and(FileFilterUtils.directoryFileFilter(), FileFilterUtils.nameFileFilter(METAMODEL_FOLDER));
 		IOFileFilter transfoFile = FileFilterUtils.and(FileFilterUtils.directoryFileFilter(), FileFilterUtils.nameFileFilter(TRANSFO_FOLDER));
 		FileFilter filter = FileFilterUtils.or(genXMLFile, codegenFile, mmFile, transfoFile);
-		FileUtils.copyDirectory(new File(getIProject().getLocationURI()), destFolder, filter);
+		FileUtils.copyDirectory(new File(getIProject().getLocationURI()), destFolder, filter);*/
+		if (codegenFolderExist()) {
+			FileUtils.copyDirectory(new File(getCodegenFolder().getLocationURI()), new File(destFolder + "/" + CODEGEN_FOLDER));
+		}
+		
+		if (metamodelsFolderExist()) {
+			FileUtils.copyDirectory(new File(getMetamodelsFolder().getLocationURI()), new File(destFolder + "/" + METAMODEL_FOLDER));
+		}
+		
+		if (tranformationsFolderExist()) {
+			FileUtils.copyDirectory(new File(getTransformationsFolder().getLocationURI()), new File(destFolder + "/" + TRANSFO_FOLDER));
+		}
+		
 		
 		ZipFile zip = new ZipFile(new File(tmpFolder.getAbsolutePath() + "/out.zip"));
 		ZipParameters p = new ZipParameters();
