@@ -11,6 +11,7 @@
       <command
             categoryId="GMMEngineCategory"
             defaultHandler="org.genmymodel.engine.connector.handlers.GMMCompileHandler"
+            description="Compiles the selected custom generator project (MTL compilation)."
             id="gmmCustomCompile"
             name="CompileCommand">
       </command>

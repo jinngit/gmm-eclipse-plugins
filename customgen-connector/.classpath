@@ -4,5 +4,10 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="lib" path="libs/zip4j-1.3.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/spring-web-4.0.6.RELEASE.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/spring-security-oauth2-2.0.2.RELEASE.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/spring-core-4.0.6.RELEASE.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/commons-io-2.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/commons-logging-1.2.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
