@@ -18,12 +18,12 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.genmymodel.engine.connector.Activator;
 import org.genmymodel.engine.connector.handlers.GMMAbstractHandler;
-import org.genmymodel.engine.connector.project.IGenMyModelProject;
+import org.genmymodel.engine.connector.project.GenMyModelProject;
 
 public abstract class GMMCustomGenJob extends Job {
-	IGenMyModelProject project;
+	GenMyModelProject project;
 	
-	public GMMCustomGenJob(String name, IGenMyModelProject project) {
+	public GMMCustomGenJob(String name, GenMyModelProject project) {
 		super(name);
 		this.project = project;
 	}

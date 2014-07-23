@@ -11,7 +11,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.genmymodel.engine.connector.project.IGenMyModelProject;
+import org.genmymodel.engine.connector.project.GenMyModelProject;
 
 /**
  * This class provides some access primitive that helps handling projects,
@@ -88,8 +88,8 @@ public abstract class GMMAbstractHandler extends AbstractHandler {
 		return extractSelection().getProject();
 	}
 	
-	protected IGenMyModelProject getGMMProject() {
-		return new IGenMyModelProject(extractProject());
+	protected GenMyModelProject getGMMProject() {
+		return new GenMyModelProject(extractProject());
 	}
 
 }

@@ -12,12 +12,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.genmymodel.engine.connector.api.GMMAPIRestClient;
 import org.genmymodel.engine.connector.api.GMMAPIRestClient.CompilCallResult;
-import org.genmymodel.engine.connector.project.IGenMyModelProject;
+import org.genmymodel.engine.connector.project.GenMyModelProject;
 import org.springframework.web.client.RestClientException;
 
 public class GMMCompileJob extends GMMCustomGenJob {
 
-	public GMMCompileJob(String name, IGenMyModelProject project) {
+	public GMMCompileJob(String name, GenMyModelProject project) {
 		super(name, project);
 	}
 	

@@ -18,7 +18,7 @@ import org.eclipse.core.resources.IProject;
 /**
  * This class provides an IProject encapsulation.
  */
-public class IGenMyModelProject {
+public class GenMyModelProject {
 	public final static String CODEGEN_FOLDER = "codegen";
 	public final static String METAMODEL_FOLDER = "metamodels";
 	public final static String TRANSFO_FOLDER = "transformations";
@@ -26,7 +26,7 @@ public class IGenMyModelProject {
 	
 	protected IProject handledProject;
 	
-	public IGenMyModelProject(IProject project) {
+	public GenMyModelProject(IProject project) {
 		setIProject(project);
 		/*if (!getIProject().isOpen()) {
 			try {
@@ -98,6 +98,10 @@ public class IGenMyModelProject {
 		
 		if (tranformationsFolderExist()) {
 			FileUtils.copyDirectory(new File(getTransformationsFolder().getLocationURI()), new File(destFolder + "/" + TRANSFO_FOLDER));
+		}
+
+		if (generatorXMLExist()) {
+			FileUtils.copyFile(new File(getGeneratorXMLFile().getLocationURI()), new File(destFolder + "/" + GENERATOR_XML));
 		}
 		
 		if (!new File(destFolder).exists()) {
