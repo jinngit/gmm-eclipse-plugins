@@ -28,7 +28,7 @@ public class GMMCompileHandler extends GMMAbstractHandler {
 
 		GMMCompileJob job = new GMMCompileJob("Compilation process", getGMMProject());
 		job.schedule();
-
+		
 		return null;
 	}
 

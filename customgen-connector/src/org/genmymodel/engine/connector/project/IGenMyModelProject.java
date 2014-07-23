@@ -100,7 +100,9 @@ public class IGenMyModelProject {
 			FileUtils.copyDirectory(new File(getTransformationsFolder().getLocationURI()), new File(destFolder + "/" + TRANSFO_FOLDER));
 		}
 		
-		
+		if (!new File(destFolder).exists()) {
+			return null;
+		}
 		ZipFile zip = new ZipFile(new File(tmpFolder.getAbsolutePath() + "/out.zip"));
 		ZipParameters p = new ZipParameters();
 		p.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);

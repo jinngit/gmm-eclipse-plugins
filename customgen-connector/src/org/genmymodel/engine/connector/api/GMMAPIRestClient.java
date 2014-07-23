@@ -3,6 +3,7 @@ package org.genmymodel.engine.connector.api;
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Logger;
@@ -14,6 +15,7 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
@@ -61,7 +63,7 @@ public class GMMAPIRestClient {
 		return THREAD_LOCAL.get();
 	}
 
-	public CompilCallResult POSTCompile(File zipArchive) {
+	public CompilCallResult POSTCompile(File zipArchive) throws IOException {
 		Resource resource = new FileSystemResource(zipArchive);
 		MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
 		parts.add("Content-Type", MediaType.MULTIPART_FORM_DATA_VALUE);
@@ -71,13 +73,17 @@ public class GMMAPIRestClient {
 				new HttpEntity<MultiValueMap<String, Object>>(parts),
 				GMMCallResult.class);
 		
-		if (((GenerationErrorHandler)template.getErrorHandler()).getStatus() != HttpStatus.OK) {
+		HttpStatus status = ((GenerationErrorHandler)template.getErrorHandler()).getStatus();
+		if (status != null && status != HttpStatus.OK) {
+			System.out.println("NULL " + ((GenerationErrorHandler)template.getErrorHandler()).getStatus());
+			System.out.println(res.getBody().getErrors());
 			return new CompilCallResult(res.getBody(), null);
 		} else {
-			return new CompilCallResult(res.getBody(), null); // TODO
+			File tmpZip = File.createTempFile("GMM", ".zip");
+			FileUtils.copyURLToFile(new URL(res.getBody().getOutputUrl()), tmpZip, 10000, 10000);
+			return new CompilCallResult(res.getBody(), tmpZip);
 		}
 	}
-	
 	
 	public class CompilCallResult {
 		public GMMCallResult callResult;
