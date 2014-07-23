@@ -44,9 +44,6 @@ public class GMMCompileJob extends GMMCustomGenJob {
 		}
 		
 		IStatus subw = apiCall(zip, monitor);
-		if (subw != Status.OK_STATUS) {
-			return subw;
-		}
 		
 		monitor.subTask("Cleaning tmp folders");
 		try {
@@ -57,6 +54,10 @@ public class GMMCompileJob extends GMMCustomGenJob {
 					+ "' temp directory. You should delete it by yourself.", e);
 		}
 		monitor.worked(1);
+		
+		if (subw != Status.OK_STATUS) {
+			return subw;
+		}
 		
 		try {
 			project.getIProject().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
@@ -88,7 +89,7 @@ public class GMMCompileJob extends GMMCustomGenJob {
 		monitor.worked(3);
 		
 		if (res.callResult.hasErrors()) {
-			return blockError(res.callResult.getErrors());
+			return nonblockError(res.callResult.getErrors());
 		}
 		
 		monitor.subTask("Dispatching compilation results");

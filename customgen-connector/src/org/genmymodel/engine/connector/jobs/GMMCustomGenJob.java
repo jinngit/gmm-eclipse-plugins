@@ -49,7 +49,7 @@ public abstract class GMMCustomGenJob extends Job {
 		return Status.OK_STATUS;
 	}
 	
-	IStatus blockError(Map<String, List<String>> errors) {
+	IStatus nonblockError(Map<String, List<String>> errors) {
 		MultiStatus err = new MultiStatus(Activator.PLUGIN_ID, Status.ERROR,
 				"Error during project compilation", null);
 		
@@ -61,7 +61,7 @@ public abstract class GMMCustomGenJob extends Job {
 			err.add(lab);
 		}
 		
-		StatusManager.getManager().handle(err, StatusManager.BLOCK);
+		StatusManager.getManager().handle(err, StatusManager.SHOW);
 		return Status.CANCEL_STATUS;
 	}
 }
