@@ -2,9 +2,9 @@ package org.genmymodel.engine.connector.handlers;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.handlers.HandlerUtil;
+import org.genmymodel.engine.connector.api.GMMAPIRestClient;
+import org.genmymodel.engine.connector.api.MyCredential;
+import org.genmymodel.engine.connector.api.ProjectBinding;
 
 /**
  * Our sample handler extends AbstractHandler, an IHandler base class.
@@ -23,11 +23,13 @@ public class GMMCompileLaunchHandler extends GMMAbstractHandler {
 	 * from the application context.
 	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
-		MessageDialog.openInformation(
-				window.getShell(),
-				"GenMyModel Engine Connector",
-				"Compile and Launch");
+		ProjectBinding[] projects = GMMAPIRestClient.getInstance().GETMyProjects(new MyCredential()); //TODO
+		for (ProjectBinding p : projects) {
+			System.out.println(p.getName());
+			System.out.println(p.getProjectId());
+			System.out.println(p.isPublic());
+			System.out.println();
+		}
 		return null;
 	}
 }

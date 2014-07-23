@@ -30,13 +30,14 @@ public abstract class GMMCustomGenJob extends Job {
 	
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
-		monitor.beginTask("Zipping custom generator project", 7);
+		monitor.beginTask("Compiling custom generator project", 7);
+		monitor.subTask("Preparing project archive");
 		File zip = null;
 		try {
 			zip = project.zipMe();
 		} catch (Exception e) {
 			return blockError(
-					"Error while zipping your projet! Did you have right to write in '"
+					"Error while preparing your projet archive! Did you have right to write in '"
 							+ GMMAbstractHandler.systemTmpFolder
 							+ "' tmp folder?", e);
 		}
@@ -48,7 +49,7 @@ public abstract class GMMCustomGenJob extends Job {
 		
 		IStatus subw = apiCall(zip, monitor);
 		
-		monitor.subTask("Cleaning tmp folders");
+		monitor.subTask("Cleaning tmp folders.");
 		try {
 			FileUtils.forceDelete(zip.getParentFile());
 		} catch (IOException e) {

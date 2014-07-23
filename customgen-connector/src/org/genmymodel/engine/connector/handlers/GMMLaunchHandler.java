@@ -6,9 +6,10 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.genmymodel.engine.connector.jobs.GMMLaunchJob;
 
 /**
- * Our sample handler extends AbstractHandler, an IHandler base class.
- * @see org.eclipse.core.commands.IHandler
- * @see org.eclipse.core.commands.AbstractHandler
+ * This class provides handler calling GenMyModel API. The GenMyModel service
+ * called allows one to launch its previously compiled project.
+ * 
+ * @author Vincent Aranega
  */
 public class GMMLaunchHandler extends GMMAbstractHandler {
 	/**
@@ -26,7 +27,7 @@ public class GMMLaunchHandler extends GMMAbstractHandler {
 
 		Job job = new GMMLaunchJob("Code generation process", getGMMProject());
 		job.schedule();
-		
+
 		return null;
 	}
 }

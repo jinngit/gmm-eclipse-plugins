@@ -11,6 +11,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.genmymodel.engine.connector.api.GMMAPIRestClient;
+import org.genmymodel.engine.connector.api.MyCredential;
 import org.genmymodel.engine.connector.api.GMMAPIRestClient.CompilCallResult;
 import org.genmymodel.engine.connector.project.GenMyModelProject;
 import org.springframework.web.client.RestClientException;
@@ -22,11 +23,11 @@ public class GMMLaunchJob extends GMMCustomGenJob {
 	}
 
 	protected IStatus apiCall(File zip, IProgressMonitor monitor) {
-		monitor.subTask("Calling GenMyModel API compilation URL");
+		monitor.subTask("Calling GenMyModel API custom generator launch service...");
 		CompilCallResult res = null;
 		try {
 			try {
-				res = GMMAPIRestClient.getInstance().POSTExec(zip, "_tiPjsFdaEDCmJtgCDSWzkw");
+				res = GMMAPIRestClient.getInstance().POSTExec(zip, "_tiPjsFdaEDCmJtgCDSWzkw", new MyCredential()); // TODO
 			} catch (IOException e) {
 				return blockError(
 						"Error while fetching generation result",
@@ -34,7 +35,7 @@ public class GMMLaunchJob extends GMMCustomGenJob {
 			}
 		} catch (RestClientException e) {
 			return blockError(
-					"Error during service call. If you are connected to the internet, please contact support",
+					"Error during service call. If you are connected to the internet, please contact support.",
 					e);
 		}
 		monitor.worked(3);

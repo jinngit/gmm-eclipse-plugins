@@ -20,4 +20,5 @@ Bundle-ClassPath: .,
  libs/commons-logging-1.2.jar,
  libs/jackson-core-2.4.1.1.jar,
  libs/jackson-databind-2.4.1.3.jar,
- libs/jackson-annotations-2.4.1.jar
+ libs/jackson-annotations-2.4.1.jar,
+ libs/spring-security-core-3.2.4.RELEASE.jar

@@ -2,18 +2,8 @@ package org.genmymodel.engine.connector.api;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.URL;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.util.logging.Logger;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.core.io.FileSystemResource;
@@ -22,20 +12,30 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * 
+ * @author Vincent Aranega
+ *
+ */
 public class GMMAPIRestClient {
-	public static final String API_URL = "https://127.0.0.1:8443/engine";
+	public static final String API_URL = "https://enginepreprodks.genmymodel.com";
+	public static final String REAL_API = "https://apipreprodks.genmymodel.com"; // https://apipreprodks.genmymodel.com
+	public static final String OAUTH_TOK = REAL_API  + "/oauth/token";
+	public static final String USER_PROJECTS = REAL_API + "/users/{username}/projects";
 	public static final String COMPILE_RESTURL = API_URL + "/mtl/compile";
 	public static final String EXEC_RESTURL_FRAG = API_URL + "/mtl/exec/";
-	private RestTemplate template;
+	private static final String CLIENT_ID = "test";
+	private static final String CLIENT_SECRET = "test";
+	//private RestTemplate template;
 
 	public static ThreadLocal<GMMAPIRestClient> THREAD_LOCAL = new ThreadLocal<GMMAPIRestClient>() {
 
@@ -47,10 +47,10 @@ public class GMMAPIRestClient {
 	};
 
 	public GMMAPIRestClient() {
-		template = new RestTemplate(new DisableSSLHttpRequestFactory());
-		template.getMessageConverters().add(new FormHttpMessageConverter());
-		template.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-		template.setErrorHandler(new GenerationErrorHandler());
+//		template = new RestTemplate(new DisableSSLHttpRequestFactory());
+//		template.getMessageConverters().add(new FormHttpMessageConverter());
+//		template.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+//		template.setErrorHandler(new GenerationErrorHandler());
 	}
 
 	public static Logger LOG = Logger.getLogger(GMMAPIRestClient.class
@@ -64,10 +64,15 @@ public class GMMAPIRestClient {
 		return THREAD_LOCAL.get();
 	}
 
-	public CompilCallResult POSTCompile(File zipArchive) throws IOException {
-		return POST(COMPILE_RESTURL, zipArchive);
+	public CompilCallResult POSTCompile(File zipArchive, GMMCredential credential) throws IOException {
+		return POST(COMPILE_RESTURL, zipArchive, credential);
 	}
 	
+	/**
+	 * 
+	 * @author Vincent Aranega
+	 *
+	 */
 	public class CompilCallResult {
 		public GMMCallResult callResult;
 		public File zip;
@@ -78,21 +83,23 @@ public class GMMAPIRestClient {
 		}
 	}
 
-	public CompilCallResult POSTExec(File zipArchive, String projectID) throws IOException {
-		return POST(EXEC_RESTURL_FRAG + projectID, zipArchive); // TODO
+	public CompilCallResult POSTExec(File zipArchive, String projectID, GMMCredential credential) throws IOException {
+		return POST(EXEC_RESTURL_FRAG + projectID, zipArchive, credential);
 	}
 	
-	private CompilCallResult POST(String url, File zipArchive) throws IOException {
+	private CompilCallResult POST(String url, File zipArchive, GMMCredential credential) throws IOException {
 		Resource resource = new FileSystemResource(zipArchive);
 		MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
 		parts.add("Content-Type", MediaType.MULTIPART_FORM_DATA_VALUE);
 		parts.add("file", resource);
+		
+		RestTemplate template = createTemplate(credential);
 
-		HttpEntity<GMMCallResult> res = template.exchange(url, HttpMethod.POST,
+		ResponseEntity<GMMCallResult> res = template.exchange(url, HttpMethod.POST,
 				new HttpEntity<MultiValueMap<String, Object>>(parts),
 				GMMCallResult.class);
 		
-		HttpStatus status = ((GenerationErrorHandler)template.getErrorHandler()).getStatus();
+		HttpStatus status = res.getStatusCode();
 		if (status != null && status != HttpStatus.OK) {
 			return new CompilCallResult(res.getBody(), null);
 		} else {
@@ -101,108 +108,32 @@ public class GMMAPIRestClient {
 			return new CompilCallResult(res.getBody(), tmpZip);
 		}
 	}
-
-	/**
-	 * Simple RequestFactory disabling ssl handshake for rest template in
-	 * context of communication between engine and api.
-	 * 
-	 * @author Vincent Aranega
-	 */
-	public class DisableSSLHttpRequestFactory extends
-			SimpleClientHttpRequestFactory {
-
-		private final HostnameVerifier verifier;
-
-		public DisableSSLHttpRequestFactory() {
-			this.verifier = new DummyHostnameVerifier();
-		}
-
-		@Override
-		protected void prepareConnection(HttpURLConnection connection,
-				String httpMethod) throws IOException {
-			if (connection instanceof HttpsURLConnection) {
-				((HttpsURLConnection) connection).setHostnameVerifier(verifier);
-				((HttpsURLConnection) connection)
-						.setSSLSocketFactory(((DummyHostnameVerifier) verifier)
-								.getSSLContext().getSocketFactory());
-			}
-			super.prepareConnection(connection, httpMethod);
-		}
-
+	
+	public ProjectBinding[] GETMyProjects(GMMCredential credential) {
+		return GET(USER_PROJECTS, ProjectBinding[].class, credential, credential.getUsername());
 	}
-
-	/**
-	 * Dummy hostname verifier
-	 * 
-	 * @author Vincent Aranega
-	 */
-	public class DummyHostnameVerifier implements HostnameVerifier {
-
-		TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
-			public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-				return null;
-			}
-
-			public void checkClientTrusted(
-					java.security.cert.X509Certificate[] certs, String authType) {
-			}
-
-			public void checkServerTrusted(
-					java.security.cert.X509Certificate[] certs, String authType) {
-			}
-		} };
-
-		public SSLContext getSSLContext() {
-			SSLContext sslContext = null;
-			try {
-				sslContext = SSLContext.getInstance("SSL");
-				sslContext.init(null, trustAllCerts,
-						new java.security.SecureRandom());
-			} catch (NoSuchAlgorithmException e) {
-				e.printStackTrace();
-			} catch (KeyManagementException e) {
-				e.printStackTrace();
-			}
-			return sslContext;
-		}
-
-		public boolean verify(String hostname, SSLSession session) {
-			// System.out.println("Verifying " + hostname);
-			return true;
-		}
+	
+	public <T> T GET(String url, Class<T> clazz, GMMCredential credential, Object... params) {
+		RestTemplate template = createTemplate(credential);
+		ResponseEntity<T> response = template.getForEntity(url, clazz, params);
+		return response.getBody();
 	}
-
-	/**
-	 * GenerationErrorHandler - This class is used to handle error
-	 * for non OK http response status.
-	 * @author Vincent Aranega
-	 */
-	class GenerationErrorHandler implements ResponseErrorHandler {
-		private HttpStatus status;
-		private boolean errors;
-
-		@Override
-		public boolean hasError(ClientHttpResponse response) throws IOException {
-			this.errors = !HttpStatus.OK.equals(response.getStatusCode());
-			return this.errors;
-		}
-
-		@Override
-		public void handleError(ClientHttpResponse response) throws IOException {
-			this.setResponse(response);
-		}
-
-		public HttpStatus getStatus() {
-			return status;
-		}
-
-		public void setResponse(ClientHttpResponse response) throws IOException {
-			this.status = response.getStatusCode();
-		}
-
-		public boolean hasErrors() {
-			return this.errors;
-		}
+	
+	protected RestTemplate createTemplate(GMMCredential credential) {
+		ResourceOwnerPasswordResourceDetails details = new ResourceOwnerPasswordResourceDetails();
+		details.setClientId(CLIENT_ID);
+		details.setClientSecret(CLIENT_SECRET);
+		details.setUsername(credential.getUsername());
+		details.setPassword(credential.getPassword());
+		details.setAccessTokenUri(OAUTH_TOK);
+		
+		OAuth2RestTemplate template = new OAuth2RestTemplate(details);
+		//template.setRequestFactory(new DisableSSLHttpRequestFactory()); // TODO remove code
+		template.getMessageConverters().add(new FormHttpMessageConverter());
+		template.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+		//template.setErrorHandler(new GenerationErrorHandler());
+		
+		return template;
 	}
 
 }
