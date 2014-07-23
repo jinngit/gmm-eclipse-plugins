@@ -15,21 +15,21 @@ import org.genmymodel.engine.connector.api.GMMAPIRestClient.CompilCallResult;
 import org.genmymodel.engine.connector.project.IGenMyModelProject;
 import org.springframework.web.client.RestClientException;
 
-public class GMMCompileJob extends GMMCustomGenJob {
+public class GMMLaunchJob extends GMMCustomGenJob {
 
-	public GMMCompileJob(String name, IGenMyModelProject project) {
+	public GMMLaunchJob(String name, IGenMyModelProject project) {
 		super(name, project);
 	}
-	
+
 	protected IStatus apiCall(File zip, IProgressMonitor monitor) {
 		monitor.subTask("Calling GenMyModel API compilation URL");
 		CompilCallResult res = null;
 		try {
 			try {
-				res = GMMAPIRestClient.getInstance().POSTCompile(zip);
+				res = GMMAPIRestClient.getInstance().POSTExec(zip);
 			} catch (IOException e) {
 				return blockError(
-						"Error while fetching compilation result",
+						"Error while fetching generation result",
 						e);
 			}
 		} catch (RestClientException e) {

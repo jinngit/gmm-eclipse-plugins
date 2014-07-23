@@ -2,6 +2,7 @@ package org.genmymodel.engine.connector.handlers;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.jobs.Job;
 import org.genmymodel.engine.connector.jobs.GMMCompileJob;
 
 /**
@@ -26,7 +27,7 @@ public class GMMCompileHandler extends GMMAbstractHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		super.execute(event);
 
-		GMMCompileJob job = new GMMCompileJob("Compilation process", getGMMProject());
+		Job job = new GMMCompileJob("Compilation process", getGMMProject());
 		job.schedule();
 		
 		return null;

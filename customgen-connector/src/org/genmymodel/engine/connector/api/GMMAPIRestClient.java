@@ -34,6 +34,7 @@ import org.springframework.web.client.RestTemplate;
 public class GMMAPIRestClient {
 	public static final String API_URL = "https://127.0.0.1:8443/engine";
 	public static final String COMPILE_RESTURL = API_URL + "/mtl/compile";
+	public static final String EXEC_RESTURL_FRAG = API_URL + "/mtl/exec/";
 	private RestTemplate template;
 
 	public static ThreadLocal<GMMAPIRestClient> THREAD_LOCAL = new ThreadLocal<GMMAPIRestClient>() {
@@ -64,23 +65,7 @@ public class GMMAPIRestClient {
 	}
 
 	public CompilCallResult POSTCompile(File zipArchive) throws IOException {
-		Resource resource = new FileSystemResource(zipArchive);
-		MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-		parts.add("Content-Type", MediaType.MULTIPART_FORM_DATA_VALUE);
-		parts.add("file", resource);
-
-		HttpEntity<GMMCallResult> res = template.exchange(COMPILE_RESTURL, HttpMethod.POST,
-				new HttpEntity<MultiValueMap<String, Object>>(parts),
-				GMMCallResult.class);
-		
-		HttpStatus status = ((GenerationErrorHandler)template.getErrorHandler()).getStatus();
-		if (status != null && status != HttpStatus.OK) {
-			return new CompilCallResult(res.getBody(), null);
-		} else {
-			File tmpZip = File.createTempFile("GMM", ".zip");
-			FileUtils.copyURLToFile(new URL(res.getBody().getOutputUrl()), tmpZip, 10000, 10000);
-			return new CompilCallResult(res.getBody(), tmpZip);
-		}
+		return POST(COMPILE_RESTURL, zipArchive);
 	}
 	
 	public class CompilCallResult {
@@ -93,6 +78,30 @@ public class GMMAPIRestClient {
 		}
 	}
 
+	public CompilCallResult POSTExec(File zipArchive) throws IOException {
+		return POST(EXEC_RESTURL_FRAG + "_tiPjsFdaEDCmJtgCDSWzkw", zipArchive); // TODO
+	}
+	
+	private CompilCallResult POST(String url, File zipArchive) throws IOException {
+		Resource resource = new FileSystemResource(zipArchive);
+		MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+		parts.add("Content-Type", MediaType.MULTIPART_FORM_DATA_VALUE);
+		parts.add("file", resource);
+
+		HttpEntity<GMMCallResult> res = template.exchange(url, HttpMethod.POST,
+				new HttpEntity<MultiValueMap<String, Object>>(parts),
+				GMMCallResult.class);
+		
+		HttpStatus status = ((GenerationErrorHandler)template.getErrorHandler()).getStatus();
+		if (status != null && status != HttpStatus.OK) {
+			return new CompilCallResult(res.getBody(), null);
+		} else {
+			File tmpZip = File.createTempFile("GMM", ".zip");
+			FileUtils.copyURLToFile(new URL(res.getBody().getOutputUrl()), tmpZip, 10000, 10000);
+			return new CompilCallResult(res.getBody(), tmpZip);
+		}
+	}
+
 	/**
 	 * Simple RequestFactory disabling ssl handshake for rest template in
 	 * context of communication between engine and api.
@@ -100,7 +109,7 @@ public class GMMAPIRestClient {
 	 * @author Vincent Aranega
 	 */
 	public class DisableSSLHttpRequestFactory extends
-	SimpleClientHttpRequestFactory {
+			SimpleClientHttpRequestFactory {
 
 		private final HostnameVerifier verifier;
 
@@ -114,8 +123,8 @@ public class GMMAPIRestClient {
 			if (connection instanceof HttpsURLConnection) {
 				((HttpsURLConnection) connection).setHostnameVerifier(verifier);
 				((HttpsURLConnection) connection)
-				.setSSLSocketFactory(((DummyHostnameVerifier) verifier)
-						.getSSLContext().getSocketFactory());
+						.setSSLSocketFactory(((DummyHostnameVerifier) verifier)
+								.getSSLContext().getSocketFactory());
 			}
 			super.prepareConnection(connection, httpMethod);
 		}
@@ -158,7 +167,7 @@ public class GMMAPIRestClient {
 		}
 
 		public boolean verify(String hostname, SSLSession session) {
-			//System.out.println("Verifying " + hostname);
+			// System.out.println("Verifying " + hostname);
 			return true;
 		}
 	}
@@ -168,36 +177,30 @@ public class GMMAPIRestClient {
 	 * for non OK http response status.
 	 * @author Vincent Aranega
 	 */
-	class GenerationErrorHandler implements ResponseErrorHandler
-	{
-		private HttpStatus	status;
-		private boolean		errors;
+	class GenerationErrorHandler implements ResponseErrorHandler {
+		private HttpStatus status;
+		private boolean errors;
 
 		@Override
-		public boolean hasError(ClientHttpResponse response) throws IOException
-		{
+		public boolean hasError(ClientHttpResponse response) throws IOException {
 			this.errors = !HttpStatus.OK.equals(response.getStatusCode());
 			return this.errors;
 		}
 
 		@Override
-		public void handleError(ClientHttpResponse response) throws IOException
-		{
+		public void handleError(ClientHttpResponse response) throws IOException {
 			this.setResponse(response);
 		}
 
-		public HttpStatus getStatus()
-		{
+		public HttpStatus getStatus() {
 			return status;
 		}
 
-		public void setResponse(ClientHttpResponse response) throws IOException
-		{
+		public void setResponse(ClientHttpResponse response) throws IOException {
 			this.status = response.getStatusCode();
 		}
 
-		public boolean hasErrors()
-		{
+		public boolean hasErrors() {
 			return this.errors;
 		}
 	}
