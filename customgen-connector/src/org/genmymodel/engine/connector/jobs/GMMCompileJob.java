@@ -87,6 +87,10 @@ public class GMMCompileJob extends GMMCustomGenJob {
 		}
 		monitor.worked(3);
 		
+		if (res.callResult.hasErrors()) {
+			return blockError(res.callResult.getErrors());
+		}
+		
 		monitor.subTask("Dispatching compilation results");
 		try {
 			ZipFile compZip = new ZipFile(res.zip);

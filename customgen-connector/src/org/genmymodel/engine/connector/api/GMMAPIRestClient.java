@@ -75,8 +75,6 @@ public class GMMAPIRestClient {
 		
 		HttpStatus status = ((GenerationErrorHandler)template.getErrorHandler()).getStatus();
 		if (status != null && status != HttpStatus.OK) {
-			System.out.println("NULL " + ((GenerationErrorHandler)template.getErrorHandler()).getStatus());
-			System.out.println(res.getBody().getErrors());
 			return new CompilCallResult(res.getBody(), null);
 		} else {
 			File tmpZip = File.createTempFile("GMM", ".zip");
@@ -160,7 +158,7 @@ public class GMMAPIRestClient {
 		}
 
 		public boolean verify(String hostname, SSLSession session) {
-			System.out.println("Verifying " + hostname);
+			//System.out.println("Verifying " + hostname);
 			return true;
 		}
 	}
