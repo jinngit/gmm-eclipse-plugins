@@ -11,8 +11,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.genmymodel.engine.connector.api.GMMAPIRestClient;
-import org.genmymodel.engine.connector.api.MyCredential;
 import org.genmymodel.engine.connector.api.GMMAPIRestClient.CompilCallResult;
+import org.genmymodel.engine.connector.api.GMMCredential;
 import org.genmymodel.engine.connector.project.GenMyModelProject;
 import org.springframework.web.client.RestClientException;
 
@@ -27,7 +27,7 @@ public class GMMLaunchJob extends GMMCustomGenJob {
 		CompilCallResult res = null;
 		try {
 			try {
-				res = GMMAPIRestClient.getInstance().POSTExec(zip, "_tiPjsFdaEDCmJtgCDSWzkw", new MyCredential()); // TODO
+				res = GMMAPIRestClient.getInstance().POSTExec(zip, "_tiPjsFdaEDCmJtgCDSWzkw", new GMMCredential("","")); // TODO
 			} catch (IOException e) {
 				return blockError(
 						"Error while fetching generation result",

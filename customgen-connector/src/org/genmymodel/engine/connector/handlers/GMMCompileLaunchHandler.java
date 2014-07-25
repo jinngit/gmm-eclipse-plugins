@@ -3,7 +3,7 @@ package org.genmymodel.engine.connector.handlers;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.genmymodel.engine.connector.api.GMMAPIRestClient;
-import org.genmymodel.engine.connector.api.MyCredential;
+import org.genmymodel.engine.connector.api.GMMCredential;
 import org.genmymodel.engine.connector.api.ProjectBinding;
 
 /**
@@ -23,7 +23,7 @@ public class GMMCompileLaunchHandler extends GMMAbstractHandler {
 	 * from the application context.
 	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		ProjectBinding[] projects = GMMAPIRestClient.getInstance().GETMyProjects(new MyCredential()); //TODO
+		ProjectBinding[] projects = GMMAPIRestClient.getInstance().GETMyProjects(new GMMCredential("","")); //TODO
 		for (ProjectBinding p : projects) {
 			System.out.println(p.getName());
 			System.out.println(p.getProjectId());

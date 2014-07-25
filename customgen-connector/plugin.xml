@@ -75,7 +75,7 @@
          </menu>
       </menuContribution>
    </extension>
-   <extension
+   <!--<extension
       id="wizard"
       name="Project"
       point="org.eclipse.ui.newWizards">
@@ -87,7 +87,7 @@
          name="List of projects"
          icon="icons/wizard.gif"
          category="wizard.category"
-         class="org.genmymodel.engine.connector.wizards.GMMProject"
+         class="org.genmymodel.engine.connector.wizards.launch.GMMProject"
          id="wizard.wizard">
       <description>
       	Project choices
@@ -103,10 +103,10 @@
       <action
             label="List of projects"
             icon="icons/action.gif"
-            class="org.genmymodel.engine.connector.wizards.ProjectAction"
+            class="org.genmymodel.engine.connector.wizards.launch.ProjectAction"
             id="wizard.action">
       </action>
    </objectContribution>
-</extension>
+</extension>-->
 
 </plugin>

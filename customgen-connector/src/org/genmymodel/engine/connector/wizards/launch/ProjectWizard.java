@@ -1,21 +1,27 @@
-package org.genmymodel.engine.connector.wizards;
+package org.genmymodel.engine.connector.wizards.launch;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWizard;
+import org.genmymodel.engine.connector.jobs.GMMCompileJob;
+import org.genmymodel.engine.connector.project.GenMyModelProject;
 
 public class ProjectWizard extends Wizard implements INewWizard
 {	
-	ProjectMainPage projectPage;
-	ProjectModel model;
+	protected ProjectMainPage projectPage;
+	protected ProjectModel model;
 	protected IStructuredSelection selection;
 	protected IWorkbench workbench;
+	GenMyModelProject project;
 
-	public ProjectWizard() {
+	public ProjectWizard(GenMyModelProject project) {
 		super();
 		model = new ProjectModel();
+		project = this.project;
 	}
 	
 	public void addPages()
@@ -53,6 +59,10 @@ public class ProjectWizard extends Wizard implements INewWizard
 		String summary = model.toString();
 		MessageDialog.openInformation(workbench.getActiveWorkbenchWindow().getShell(), 
 			"Project info", summary);
+		
+		Job job = new GMMCompileJob("Compilation process", project, model.getCredential());
+		job.schedule();
+		
 		return true;
 	}
 }
