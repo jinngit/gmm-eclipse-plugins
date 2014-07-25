@@ -14,6 +14,7 @@ import org.genmymodel.engine.connector.api.GMMAPIRestClient;
 import org.genmymodel.engine.connector.api.MyCredential;
 import org.genmymodel.engine.connector.api.GMMAPIRestClient.CompilCallResult;
 import org.genmymodel.engine.connector.project.GenMyModelProject;
+import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.web.client.RestClientException;
 
 public class GMMCompileJob extends GMMCustomGenJob {
@@ -21,29 +22,32 @@ public class GMMCompileJob extends GMMCustomGenJob {
 	public GMMCompileJob(String name, GenMyModelProject project) {
 		super(name, project);
 	}
-	
+
 	protected IStatus apiCall(File zip, IProgressMonitor monitor) {
 		monitor.subTask("Calling GenMyModel API custom generator compilation service...");
 		CompilCallResult res = null;
 		try {
-			try {
-				res = GMMAPIRestClient.getInstance().POSTCompile(zip, new MyCredential());
-			} catch (IOException e) {
-				return blockError(
-						"Error while fetching compilation result.",
-						e);
-			}
+			res = GMMAPIRestClient.getInstance().POSTCompile(zip, new MyCredential());
+		} catch (IOException e) {
+			return blockError(
+					"Error while fetching compilation result.",
+					e);
+		} catch (OAuth2Exception e) {
+			return blockError(
+					"Wrong credentials, your username or pass is not good.\nYou have to "
+					+ "use a user/pass credential (github and google+ authentications are not supported).",
+					e);
 		} catch (RestClientException e) {
 			return blockError(
 					"Error during service call. If you are connected to the internet, please contact support.",
 					e);
 		}
 		monitor.worked(3);
-		
+
 		if (res.callResult.hasErrors()) {
 			return nonblockError(res.callResult.getErrors());
 		}
-		
+
 		monitor.subTask("Dispatching compilation results");
 		try {
 			ZipFile compZip = new ZipFile(res.zip);
@@ -59,7 +63,7 @@ public class GMMCompileJob extends GMMCustomGenJob {
 					+ "' temp directory. You should delete it by yourself.", e);
 		}
 		monitor.worked(2);
-		
+
 		return Status.OK_STATUS;
 	}
 
