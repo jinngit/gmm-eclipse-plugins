@@ -10,15 +10,14 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 
-public class ProjectModel 
+public class NewCustomgenProjectWizardModel 
 {	
-	protected String name, str;
+	protected String name;
 	protected Boolean metamodel, transformation;
-	protected InputStream is;
 
 	public String toString()
 	{
-		return " Name is : " + name
+		return " Name is: " + name
 				+ "\n Metamodel value  is : " + metamodel
 				+ "\n Transformation value  is : " + transformation;	
 	}
@@ -30,10 +29,6 @@ public class ProjectModel
 		IProject project = root.getProject(name);
 		project.create(null);
 		project.open(null);
-		
-//		IProjectDescription description = project.getDescription();
-//		description.setNatureIds(new String[] { JavaCore.NATURE_ID });
-//		project.setDescription(description, null);
 		
 		if (metamodel) {
 			IFolder metamodelFolder = project.getFolder("metamodel");
@@ -49,8 +44,15 @@ public class ProjectModel
 		codegenFolder.create(false, true, null);			
 
 		IFile mtl = project.getFile("codegen/"+name+".mtl");
-		str = "[module "+name+"('http://www.eclipse.org/uml2/4.0.0/UML')]";
-		is = new ByteArrayInputStream(str.getBytes());
+		String str =  "[comment encoding = UTF-8 /]\n";
+		str += "[module "+name+"('http://www.eclipse.org/uml2/4.0.0/UML')]\n\n";
+		str += "[template public generate(m : Model)]\n";
+		str += "[comment @main/]\n";
+		str += "[file ('hello.md', false, 'UTF-8')]\n";
+		str += "# Hello world from [m.name/]\n";
+		str += "[/file]\n";
+		str += "[/template]";
+		InputStream is = new ByteArrayInputStream(str.getBytes());
 		mtl.create(is, false, null);
 				
 		IFile generator = project.getFile("generator.xml");
@@ -58,7 +60,7 @@ public class ProjectModel
 				+ "\t <name>"+name+"</name> \n"
 				+ "\t <m2t name=\""+name+".mtl\" /> \n"
 			+"</generator>";
-		InputStream is = new ByteArrayInputStream(str.getBytes());
+		is = new ByteArrayInputStream(str.getBytes());
 		generator.create(is, false, null);
 	}
 	

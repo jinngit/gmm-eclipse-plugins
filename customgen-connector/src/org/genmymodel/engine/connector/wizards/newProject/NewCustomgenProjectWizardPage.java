@@ -4,8 +4,6 @@ import org.eclipse.jface.dialogs.IDialogPage;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
@@ -19,7 +17,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 
 
-public class ProjectMainPage extends WizardPage implements Listener
+public class NewCustomgenProjectWizardPage extends WizardPage implements Listener
 {
 	IWorkbench workbench;
 	IStructuredSelection selection;
@@ -29,10 +27,10 @@ public class ProjectMainPage extends WizardPage implements Listener
 	/**
 	 * Constructor for ProjectMainPage.
 	 */
-	public ProjectMainPage(IWorkbench workbench, IStructuredSelection selection) {
+	public NewCustomgenProjectWizardPage(IWorkbench workbench, IStructuredSelection selection) {
 		super("Page");
-		setTitle("Project");
-		setDescription("Create new Project :");
+		setTitle("GenMyModel Custom Generator Project");
+		setDescription("Create new Project");
 		this.workbench = workbench;
 		this.selection = selection;	
 	}
@@ -53,7 +51,7 @@ public class ProjectMainPage extends WizardPage implements Listener
 		setControl(compositeField);
 		
 		final Label l1 = new Label(compositeField, SWT.RIGHT);
-	    l1.setText("Name :");
+	    l1.setText("Project name:");
 	    fd.top = new FormAttachment(10, 10);
 	    fd.left = new FormAttachment(0, 10);
 	    fd.bottom = new FormAttachment(30, 0);
@@ -67,7 +65,7 @@ public class ProjectMainPage extends WizardPage implements Listener
 	    name.setLayoutData(fd);
 	    
 	    metamodel = new Button(compositeField, SWT.CHECK);
-	    metamodel.setText("Metamodel");
+	    metamodel.setText("My project will use intermediate metamodels");
 	    fd = new FormData();
 	    fd.top = new FormAttachment(l1, 5);
 	    fd.left = new FormAttachment(0, 10);
@@ -76,7 +74,7 @@ public class ProjectMainPage extends WizardPage implements Listener
 	    metamodel.setLayoutData(fd);
 	    
 	    transformation = new Button(compositeField, SWT.CHECK);
-	    transformation.setText("Transformation");
+	    transformation.setText("My project will use M2M transformations");
 	    fd = new FormData();
 	    fd.top = new FormAttachment(metamodel, 0, SWT.TOP);
 	    fd.left = new FormAttachment(metamodel, 10);
@@ -108,8 +106,8 @@ public class ProjectMainPage extends WizardPage implements Listener
 	
 	private void saveDataToModel()
 	{
-		ProjectWizard wizard = (ProjectWizard)getWizard();
-		ProjectModel model = wizard.model;
+		NewCustomgenProjectWizard wizard = (NewCustomgenProjectWizard)getWizard();
+		NewCustomgenProjectWizardModel model = wizard.model;
 		model.name = name.getText();
 		model.metamodel = metamodel.getSelection();
 		model.transformation = transformation.getSelection();

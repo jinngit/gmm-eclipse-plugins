@@ -1,28 +1,27 @@
 package org.genmymodel.engine.connector.wizards.newProject;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 
-public class ProjectWizard extends Wizard implements INewWizard
+public class NewCustomgenProjectWizard extends Wizard implements INewWizard
 {	
-	ProjectMainPage projectPage;
-	ProjectModel model;
+	NewCustomgenProjectWizardPage projectPage;
+	NewCustomgenProjectWizardModel model;
 	protected IStructuredSelection selection;
 	protected IWorkbench workbench;
 
-	public ProjectWizard() {
+	public NewCustomgenProjectWizard() {
 		super();
-		model = new ProjectModel();
+		model = new NewCustomgenProjectWizardModel();
 	}
 	
 	public void addPages()
 	{
-		projectPage = new ProjectMainPage(workbench, selection);
+		projectPage = new NewCustomgenProjectWizardPage(workbench, selection);
 		addPage(projectPage);
 	}
 
@@ -52,10 +51,6 @@ public class ProjectWizard extends Wizard implements INewWizard
 	
 	public boolean performFinish() 
 	{
-		String summary = model.toString();
-		MessageDialog.openInformation(workbench.getActiveWorkbenchWindow().getShell(), 
-			"Project info", summary);
-		
 		try {
 			model.createProject();
 		} catch (CoreException e) {

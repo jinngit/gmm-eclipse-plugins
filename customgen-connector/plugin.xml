@@ -75,6 +75,27 @@
          </menu>
       </menuContribution>
    </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="gmmNProjectParent"
+            name="GenMyModel">
+      </category>
+      <category
+            id="gmmNProject"
+            name="Custom Generator Project"
+            parentCategory="gmmNProjectParent">
+      </category>
+      <wizard
+            category="gmmNProjectParent/gmmNProject"
+            class="org.genmymodel.engine.connector.wizards.newProject.NewCustomgenProjectWizard"
+            hasPages="true"
+            icon="icons/gmm.ico"
+            id="gmmNPWizard"
+            name="Custom Generator Project"
+            project="true">
+      </wizard>
+   </extension>
    <!--<extension
       id="wizard"
       name="Project"
