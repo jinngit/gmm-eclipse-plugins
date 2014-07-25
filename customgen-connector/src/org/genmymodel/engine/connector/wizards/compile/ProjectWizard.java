@@ -1,4 +1,4 @@
-package org.genmymodel.engine.connector.wizards.launch;
+package org.genmymodel.engine.connector.wizards.compile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;

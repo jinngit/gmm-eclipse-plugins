@@ -1,4 +1,4 @@
-package org.genmymodel.engine.connector.wizards.launch;
+package org.genmymodel.engine.connector.wizards.compile;
 
 import org.genmymodel.engine.connector.api.GMMCredential;
 

@@ -13,7 +13,7 @@ import org.eclipse.core.runtime.CoreException;
 public class NewCustomgenProjectWizardModel 
 {	
 	protected String name;
-	protected Boolean metamodel, transformation;
+	protected boolean metamodel, transformation;
 
 	public String toString()
 	{

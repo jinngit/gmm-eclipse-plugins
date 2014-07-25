@@ -1,4 +1,4 @@
-package org.genmymodel.engine.connector.wizards.launch;
+package org.genmymodel.engine.connector.wizards.compile;
 
 import org.eclipse.jface.dialogs.IDialogPage;
 import org.eclipse.jface.viewers.IStructuredSelection;

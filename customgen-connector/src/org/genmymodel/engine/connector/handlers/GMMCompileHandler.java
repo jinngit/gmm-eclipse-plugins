@@ -9,7 +9,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.genmymodel.engine.connector.project.GenMyModelProject;
-import org.genmymodel.engine.connector.wizards.launch.ProjectWizard;
+import org.genmymodel.engine.connector.wizards.compile.ProjectWizard;
 
 /**
  * This class provides handler calling GenMyModel API. The GenMyModel service
