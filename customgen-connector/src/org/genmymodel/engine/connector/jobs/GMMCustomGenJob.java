@@ -36,6 +36,7 @@ public abstract class GMMCustomGenJob extends Job {
 		try {
 			zip = project.zipMe();
 		} catch (Exception e) {
+			e.printStackTrace();
 			return blockError(
 					"Error while preparing your projet archive! Did you have right to write in '"
 							+ GMMAbstractHandler.systemTmpFolder

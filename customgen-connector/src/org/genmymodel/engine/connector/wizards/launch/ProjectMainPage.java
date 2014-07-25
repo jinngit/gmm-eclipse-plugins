@@ -7,6 +7,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
@@ -37,6 +39,9 @@ public class ProjectMainPage extends WizardPage implements Listener
 	Text login, password;
 	Button refresh;
 	
+	ProjectWizard wizard;
+	ProjectModel model;
+	
 	/**
 	 * Constructor for ProjectMainPage.
 	 */
@@ -45,14 +50,17 @@ public class ProjectMainPage extends WizardPage implements Listener
 		setTitle("Project");
 		setDescription("Select the project");
 		this.workbench = workbench;
-		this.selection = selection;	
+		this.selection = selection;
 	}
 
 	/**
 	 * @see IDialogPage#createControl(Composite)
 	 */
 	public void createControl(Composite parent)
-	{		
+	{	
+		wizard = (ProjectWizard)getWizard();
+		model = wizard.model;
+		
 		Composite composite =  new Composite(parent, SWT.NULL);
 		composite.setLayout(new GridLayout());
 		setControl(composite);
@@ -132,26 +140,28 @@ public class ProjectMainPage extends WizardPage implements Listener
 	
 	private void addListeners() {
 		table.addListener(SWT.Selection, this);
-	}
-	
-	private void saveDataToModel(Event event)
-	{
-		ProjectWizard wizard = (ProjectWizard)getWizard();
-		ProjectModel model = wizard.model;
-		model.project = ((TableItem) event.item).getText();
-		model.login = login.getText();
-		model.password = password.getText();
+		login.addModifyListener(new ModifyListener(){
+		      public void modifyText(ModifyEvent event) {
+		    	  model.login = ((Text) event.widget).getText();
+		        }
+		      });
+		password.addModifyListener(new ModifyListener(){
+		      public void modifyText(ModifyEvent event) {
+		    	  model.password = ((Text) event.widget).getText();
+		        }
+		      });
 	}
 	
 	 @Override
      public void handleEvent(Event event) {
-         saveDataToModel(event);
+		 model.project = ((TableItem) event.item).getText();
      }
-	 
+	
 	private void addLine(Composite parent) {
 		Label line = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL | SWT.BOLD);
 		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
 		line.setLayoutData(gridData);
 	}
+
 }
 

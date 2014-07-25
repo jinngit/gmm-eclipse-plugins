@@ -21,7 +21,7 @@ public class ProjectWizard extends Wizard implements INewWizard
 	public ProjectWizard(GenMyModelProject project) {
 		super();
 		model = new ProjectModel();
-		project = this.project;
+		this.project = project;
 	}
 	
 	public void addPages()
@@ -59,7 +59,7 @@ public class ProjectWizard extends Wizard implements INewWizard
 		String summary = model.toString();
 		MessageDialog.openInformation(workbench.getActiveWorkbenchWindow().getShell(), 
 			"Project info", summary);
-		
+		System.out.println("dsfsdf"+model.getCredential());
 		Job job = new GMMCompileJob("Compilation process", project, model.getCredential());
 		job.schedule();
 		

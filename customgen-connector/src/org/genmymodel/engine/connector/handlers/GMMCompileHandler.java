@@ -8,6 +8,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.genmymodel.engine.connector.project.GenMyModelProject;
 import org.genmymodel.engine.connector.wizards.launch.ProjectWizard;
 
 /**
@@ -34,7 +35,9 @@ public class GMMCompileHandler extends GMMAbstractHandler {
 		ISelection selection = HandlerUtil.getCurrentSelection(getCurrentEvent());
 		IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart(); 
 		
-		ProjectWizard wizard = new ProjectWizard(getGMMProject());
+		System.out.println("getGMMProject() "+ getGMMProject());
+		GenMyModelProject project = getGMMProject();
+		ProjectWizard wizard = new ProjectWizard(project);
 		if ((selection instanceof IStructuredSelection) || (selection == null))
 		wizard.init(part.getSite().getWorkbenchWindow().getWorkbench(), 
 			(IStructuredSelection)selection);

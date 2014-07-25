@@ -15,6 +15,7 @@ public class ProjectModel
 	
 	public GMMCredential getCredential()
 	{
+		System.out.println(login + " - " + password );
 		 	return new GMMCredential(login, password);
 	}
 	
