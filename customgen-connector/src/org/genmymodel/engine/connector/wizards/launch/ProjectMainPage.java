@@ -9,6 +9,8 @@ import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
@@ -16,9 +18,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -29,7 +29,7 @@ import org.genmymodel.engine.connector.api.GMMCredential;
 import org.genmymodel.engine.connector.api.ProjectBinding;
 
 
-public class ProjectMainPage extends WizardPage implements Listener
+public class ProjectMainPage extends WizardPage
 {
 	IWorkbench workbench;
 	IStructuredSelection selection;
@@ -139,23 +139,27 @@ public class ProjectMainPage extends WizardPage implements Listener
 	}
 	
 	private void addListeners() {
-		table.addListener(SWT.Selection, this);
-		login.addModifyListener(new ModifyListener(){
-		      public void modifyText(ModifyEvent event) {
-		    	  model.login = ((Text) event.widget).getText();
-		        }
-		      });
-		password.addModifyListener(new ModifyListener(){
-		      public void modifyText(ModifyEvent event) {
-		    	  model.password = ((Text) event.widget).getText();
-		        }
-		      });
+		table.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				model.project = ((TableItem) e.item).getText();
+			}
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+			}
+		});
+		login.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent event) {
+				model.login = ((Text) event.widget).getText();
+			}
+		});
+		password.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent event) {
+				model.password = ((Text) event.widget).getText();
+			}
+		});
 	}
-	
-	 @Override
-     public void handleEvent(Event event) {
-		 model.project = ((TableItem) event.item).getText();
-     }
 	
 	private void addLine(Composite parent) {
 		Label line = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL | SWT.BOLD);
