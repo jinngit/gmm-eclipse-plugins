@@ -14,6 +14,7 @@ import org.genmymodel.engine.connector.api.GMMAPIRestClient;
 import org.genmymodel.engine.connector.api.GMMAPIRestClient.CompilCallResult;
 import org.genmymodel.engine.connector.api.GMMCredential;
 import org.genmymodel.engine.connector.project.GenMyModelProject;
+import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.web.client.RestClientException;
 
 public class GMMLaunchJob extends GMMCustomGenJob {
@@ -33,6 +34,11 @@ public class GMMLaunchJob extends GMMCustomGenJob {
 						"Error while fetching generation result",
 						e);
 			}
+		} catch (OAuth2Exception e) {
+			return blockError(
+					"Wrong credentials, your username or pass is not good.\nYou have to "
+					+ "use a user/pass credential (github and google+ authentications are not supported).",
+					e);
 		} catch (RestClientException e) {
 			return blockError(
 					"Error during service call. If you are connected to the internet, please contact support.",
