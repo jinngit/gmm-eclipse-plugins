@@ -58,8 +58,8 @@ public class NewCustomgenProjectWizardModel {
 
 		IFile generator = project.getFile("generator.xml");
 		str = 	"<generator> \n" + 
-				"\t <name>" + name + "</name> \n" + 
-				"\t <m2t name=\"" + name + ".mtl\" /> \n" + 
+				"\t <name>" + mtlName + "</name> \n" + 
+				"\t <m2t name=\"" + mtlName + ".mtl\" /> \n" + 
 				"</generator>";
 		is = new ByteArrayInputStream(str.getBytes());
 		generator.create(is, false, null);

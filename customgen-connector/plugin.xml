@@ -5,27 +5,21 @@
    <extension
          point="org.eclipse.ui.commands">
       <category
-            id="GMMEngineCategory"
+            id="org.genmymodel.category"
             name="GenMyModel Engine Connector">
       </category>
       <command
-            categoryId="GMMEngineCategory"
+            categoryId="org.genmymodel.category"
             defaultHandler="org.genmymodel.engine.connector.handlers.GMMCompileHandler"
             description="Compiles the selected custom generator project (MTL compilation)."
-            id="gmmCustomCompile"
+            id="org.genmymodel.compile.command"
             name="CompileCommand">
       </command>
       <command
-            categoryId="GMMEngineCategory"
+            categoryId="org.genmymodel.category"
             defaultHandler="org.genmymodel.engine.connector.handlers.GMMLaunchHandler"
-            id="gmmCustomLaunch"
+            id="org.genmymodel.launch.commandor"
             name="LaunchCommand">
-      </command>
-      <command
-            categoryId="GMMEngineCategory"
-            defaultHandler="org.genmymodel.engine.connector.handlers.GMMCompileLaunchHandler"
-            id="gmmCustomCompileLaunch"
-            name="CompileLaunchCommand">
       </command>
    </extension>
    <extension
@@ -36,18 +30,13 @@
          <menu
                label="GenMyModel">
             <command
-                  commandId="gmmCustomCompile"
+                  commandId="org.genmymodel.compile.command"
                   label="Compile"
                   style="push">
             </command>
             <command
-                  commandId="gmmCustomLaunch"
+                  commandId="org.genmymodel.launch.command"
                   label="Launch"
-                  style="push">
-            </command>
-            <command
-                  commandId="gmmCustomCompileLaunch"
-                  label="Compile and Launch"
                   style="push">
             </command>
          </menu>
@@ -58,18 +47,13 @@
          <menu
                label="GenMyModel">
             <command
-                  commandId="gmmCustomCompile"
+                  commandId="org.genmymodel.compile.command"
                   label="Compile"
                   style="push">
             </command>
             <command
-                  commandId="gmmCustomLaunch"
+                  commandId="org.genmymodel.launch.commandor"
                   label="Launch"
-                  style="push">
-            </command>
-            <command
-                  commandId="gmmCustomCompileLaunch"
-                  label="Compile and Launch"
                   style="push">
             </command>
          </menu>
@@ -78,20 +62,20 @@
    <extension
          point="org.eclipse.ui.newWizards">
       <category
-            id="gmmNProjectParent"
+            id="org.genmymodel.newproject.category"
             name="GenMyModel">
       </category>
       <category
-            id="gmmNProject"
+            id="org.genmymodel.newproject.page"
             name="Custom Generator Project"
             parentCategory="gmmNProjectParent">
       </category>
       <wizard
-            category="gmmNProjectParent/gmmNProject"
+            category="org.genmymodel.newproject.category/org.genmymodel.newproject.page"
             class="org.genmymodel.engine.connector.wizards.newProject.NewCustomgenProjectWizard"
             hasPages="true"
             icon="icons/gmm.ico"
-            id="gmmNPWizard"
+            id="org.genmymodel.newproject.wizard"
             name="Custom Generator Project"
             project="true">
       </wizard>
