@@ -1,7 +1,6 @@
 package org.genmymodel.engine.connector.wizards.newProject;
 
 import org.eclipse.jface.dialogs.IDialogPage;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -16,43 +15,34 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IWorkbench;
 
-
-public class NewCustomgenProjectWizardPage extends WizardPage
-{
-	IWorkbench workbench;
-	IStructuredSelection selection;
-	Text nameWidget;
-	Button metamodelWidget, transformationWidget;
-	String name;
-	boolean metamodel, transformation;
-	NewCustomgenProjectWizardModel model;
+public class NewCustomgenProjectWizardPage extends WizardPage {
+	private Text nameWidget;
+	private Button metamodelWidget;
+	private Button transformationWidget;
+	private NewCustomgenProjectWizardModel model;
 
 	/**
 	 * Constructor for ProjectMainPage.
 	 */
-	public NewCustomgenProjectWizardPage(IWorkbench workbench, IStructuredSelection selection) {
+	public NewCustomgenProjectWizardPage() {
 		super("Page");
 		setTitle("GenMyModel Custom Generator Project");
 		setDescription("Create new Project");
-		this.workbench = workbench;
-		this.selection = selection;	
 	}
 
 	/**
 	 * @see IDialogPage#createControl(Composite)
 	 */
-	public void createControl(Composite parent)
-	{		
-		model =  ((NewCustomgenProjectWizard)getWizard()).model;
-		Composite composite =  new Composite(parent, SWT.NULL);
+	public void createControl(Composite parent) {
+		model = ((NewCustomgenProjectWizard) getWizard()).model;
+		Composite composite = new Composite(parent, SWT.NULL);
 		composite.setLayout(new GridLayout());
 		setControl(composite);
 
 		FormData fd = new FormData();
 
-		Composite compositeField =  new Composite(composite, SWT.NULL);
+		Composite compositeField = new Composite(composite, SWT.NULL);
 		compositeField.setLayout(new FormLayout());
 		setControl(compositeField);
 
@@ -124,4 +114,3 @@ public class NewCustomgenProjectWizardPage extends WizardPage
 		});
 	}
 }
-
