@@ -60,7 +60,7 @@ public class ProjectWizard extends Wizard implements INewWizard
 		MessageDialog.openInformation(workbench.getActiveWorkbenchWindow().getShell(), 
 			"Project info", summary);
 		System.out.println("dsfsdf"+model.getCredential());
-		Job job = new GMMCompileJob("Compilation process", project, model.getCredential());
+		Job job = new GMMCompileJob("Compilation process", project);
 		job.schedule();
 		
 		return true;

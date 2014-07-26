@@ -12,25 +12,21 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.genmymodel.engine.connector.api.GMMAPIRestClient;
 import org.genmymodel.engine.connector.api.GMMAPIRestClient.CompilCallResult;
-import org.genmymodel.engine.connector.api.GMMCredential;
 import org.genmymodel.engine.connector.project.GenMyModelProject;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.web.client.RestClientException;
 
 public class GMMCompileJob extends GMMCustomGenJob {
 
-	GMMCredential credential;
-	
-	public GMMCompileJob(String name, GenMyModelProject project, GMMCredential credential) {
+	public GMMCompileJob(String name, GenMyModelProject project) {
 		super(name, project);
-		this.credential = credential;
 	}
 
 	protected IStatus apiCall(File zip, IProgressMonitor monitor) {
 		monitor.subTask("Calling GenMyModel API custom generator compilation service...");
 		CompilCallResult res = null;
 		try {
-			res = GMMAPIRestClient.getInstance().POSTCompile(zip, credential);
+			res = GMMAPIRestClient.getInstance().POSTCompile(zip);
 		} catch (IOException e) {
 			return blockError(
 					"Error while fetching compilation result.",

@@ -30,14 +30,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class GMMAPIRestClient {
 	public static final String API_URL = "https://enginepreprodks.genmymodel.com";
-	public static final String REAL_API = "https://apipreprodks.genmymodel.com"; // https://apipreprodks.genmymodel.com
+	public static final String REAL_API = "https://apipreprodks.genmymodel.com"; 
 	public static final String OAUTH_TOK = REAL_API  + "/oauth/token";
 	public static final String USER_PROJECTS = REAL_API + "/users/{username}/projects";
 	public static final String COMPILE_RESTURL = API_URL + "/mtl/compile";
 	public static final String EXEC_RESTURL_FRAG = API_URL + "/mtl/exec/";
 	private static final String CLIENT_ID = "test";
 	private static final String CLIENT_SECRET = "test";
-	//private RestTemplate template;
 
 	public static ThreadLocal<GMMAPIRestClient> THREAD_LOCAL = new ThreadLocal<GMMAPIRestClient>() {
 
@@ -48,11 +47,7 @@ public class GMMAPIRestClient {
 
 	};
 
-	public GMMAPIRestClient() {
-		//		template = new RestTemplate(new DisableSSLHttpRequestFactory());
-		//		template.getMessageConverters().add(new FormHttpMessageConverter());
-		//		template.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-		//		template.setErrorHandler(new GenerationErrorHandler());
+	private GMMAPIRestClient() {
 	}
 
 	public static Logger LOG = Logger.getLogger(GMMAPIRestClient.class
@@ -66,36 +61,19 @@ public class GMMAPIRestClient {
 		return THREAD_LOCAL.get();
 	}
 
-	public CompilCallResult POSTCompile(File zipArchive, GMMCredential credential) throws IOException {
-		return POST(COMPILE_RESTURL, zipArchive, credential);
-	}
-
-	/**
-	 * 
-	 * @author Vincent Aranega
-	 *
-	 */
-	public class CompilCallResult {
-		public GMMCallResult callResult;
-		public File zip;
-
-		public CompilCallResult(GMMCallResult res, File zip) {
-			this.callResult = res;
-			this.zip = zip;
-		}
+	public CompilCallResult POSTCompile(File zipArchive) throws IOException {
+		return POST(new RestTemplate(), COMPILE_RESTURL, zipArchive);
 	}
 
 	public CompilCallResult POSTExec(File zipArchive, String projectID, GMMCredential credential) throws IOException {
-		return POST(EXEC_RESTURL_FRAG + projectID, zipArchive, credential);
+		return POST(createOAuthTemplate(credential), EXEC_RESTURL_FRAG + projectID, zipArchive);
 	}
 
-	private CompilCallResult POST(String url, File zipArchive, GMMCredential credential) throws IOException {
+	private CompilCallResult POST(RestTemplate template, String url, File zipArchive) throws IOException {
 		Resource resource = new FileSystemResource(zipArchive);
 		MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
 		parts.add("Content-Type", MediaType.MULTIPART_FORM_DATA_VALUE);
 		parts.add("file", resource);
-
-		RestTemplate template = createTemplate(credential);
 
 		try {
 			ResponseEntity<GMMCallResult> res = template.exchange(url, HttpMethod.POST,
@@ -115,12 +93,12 @@ public class GMMAPIRestClient {
 	}
 
 	public <T> T GET(String url, Class<T> clazz, GMMCredential credential, Object... params) {
-		RestTemplate template = createTemplate(credential);
+		RestTemplate template = createOAuthTemplate(credential);
 		ResponseEntity<T> response = template.getForEntity(url, clazz, params);
 		return response.getBody();
 	}
 
-	protected RestTemplate createTemplate(GMMCredential credential) {
+	protected RestTemplate createOAuthTemplate(GMMCredential credential) {
 		ResourceOwnerPasswordResourceDetails details = new ResourceOwnerPasswordResourceDetails();
 		details.setClientId(CLIENT_ID);
 		details.setClientSecret(CLIENT_SECRET);
@@ -133,6 +111,21 @@ public class GMMAPIRestClient {
 		template.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
 		return template;
+	}
+	
+	/**
+	 * 
+	 * @author Vincent Aranega
+	 *
+	 */
+	public class CompilCallResult {
+		public GMMCallResult callResult;
+		public File zip;
+
+		public CompilCallResult(GMMCallResult res, File zip) {
+			this.callResult = res;
+			this.zip = zip;
+		}
 	}
 
 }
