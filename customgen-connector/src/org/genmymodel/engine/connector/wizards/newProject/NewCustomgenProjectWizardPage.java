@@ -7,12 +7,12 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
@@ -36,46 +36,38 @@ public class NewCustomgenProjectWizardPage extends WizardPage {
 	 */
 	public void createControl(Composite parent) {
 		model = ((NewCustomgenProjectWizard) getWizard()).model;
+		
 		Composite composite = new Composite(parent, SWT.NULL);
-		composite.setLayout(new GridLayout());
+		composite.setLayout(new FillLayout(SWT.VERTICAL));
 		setControl(composite);
+		
+		Composite upper = new Composite(composite, SWT.NONE);
+		upper.setLayout(new GridLayout(2, false));
+		Label nameLabel = new Label(upper, SWT.RIGHT);
+		nameLabel.setText("Project name:");
+		
+		nameWidget = new Text(upper, SWT.BORDER);
+		GridData gridData = new GridData();
+		gridData.horizontalAlignment = SWT.FILL;
+		gridData.grabExcessHorizontalSpace = true;
+		nameWidget.setLayoutData(gridData);
 
-		FormData fd = new FormData();
+		Group optionsInfo = new Group(composite, SWT.NONE);
+		optionsInfo.setSize(composite.getSize());
+		optionsInfo.setText("custom generator options");
+		optionsInfo.setLayout(new GridLayout(2, true));
 
-		Composite compositeField = new Composite(composite, SWT.NULL);
-		compositeField.setLayout(new FormLayout());
-		setControl(compositeField);
-
-		final Label l1 = new Label(compositeField, SWT.RIGHT);
-		l1.setText("Project name:");
-		fd.top = new FormAttachment(10, 10);
-		fd.left = new FormAttachment(0, 10);
-		fd.bottom = new FormAttachment(30, 0);
-		fd.right = new FormAttachment(40, 0);
-		l1.setLayoutData(fd);
-
-		nameWidget = new Text(compositeField, SWT.BORDER | SWT.SINGLE);
-		fd = new FormData();
-		fd.top = new FormAttachment(l1, 0, SWT.TOP);
-		fd.left = new FormAttachment(l1, 10);
-		nameWidget.setLayoutData(fd);
-
-		metamodelWidget = new Button(compositeField, SWT.CHECK);
+		metamodelWidget = new Button(optionsInfo, SWT.CHECK);
 		metamodelWidget.setText("My project will use intermediate metamodels");
-		fd = new FormData();
-		fd.top = new FormAttachment(l1, 5);
-		fd.left = new FormAttachment(0, 10);
-		fd.bottom = new FormAttachment(40, 0);
-		fd.right = new FormAttachment(40, 0);
-		metamodelWidget.setLayoutData(fd);
-
-		transformationWidget = new Button(compositeField, SWT.CHECK);
+		
+		
+		transformationWidget = new Button(optionsInfo, SWT.CHECK);
 		transformationWidget.setText("My project will use M2M transformations");
-		fd = new FormData();
-		fd.top = new FormAttachment(metamodelWidget, 0, SWT.TOP);
-		fd.left = new FormAttachment(metamodelWidget, 10);
-		transformationWidget.setLayoutData(fd);
-
+		GridData gdata = new GridData();
+		gdata.horizontalAlignment = SWT.RIGHT;
+		gdata.grabExcessHorizontalSpace = true;
+		transformationWidget.setLayoutData(gdata);
+		
 		addListeners();
 	}
 

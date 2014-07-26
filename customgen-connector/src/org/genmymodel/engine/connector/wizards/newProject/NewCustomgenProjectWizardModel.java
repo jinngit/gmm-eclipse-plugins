@@ -1,5 +1,6 @@
 package org.genmymodel.engine.connector.wizards.newProject;
 
+import java.beans.Introspector;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
@@ -9,6 +10,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.genmymodel.engine.connector.project.GenMyModelProject;
 
 public class NewCustomgenProjectWizardModel {
 	protected String name;
@@ -16,8 +18,9 @@ public class NewCustomgenProjectWizardModel {
 	protected boolean transformation;
 
 	public String toString() {
-		return "Custom generator project: " + name + "\n +- Metamodels? "
-				+ metamodel + "\n +- Transformations? " + transformation;
+		return	"Custom generator project: " + name + 
+				"\n +- Metamodels? " + metamodel + 
+				"\n +- Transformations? " + transformation;
 	}
 
 	public void createProject() throws CoreException {
@@ -27,21 +30,22 @@ public class NewCustomgenProjectWizardModel {
 		project.open(null);
 
 		if (metamodel) {
-			IFolder metamodelFolder = project.getFolder("metamodel");
+			IFolder metamodelFolder = project.getFolder(GenMyModelProject.METAMODEL_FOLDER);
 			metamodelFolder.create(false, true, null);
 		}
 
 		if (transformation) {
-			IFolder transformationFolder = project.getFolder("transformation");
+			IFolder transformationFolder = project.getFolder(GenMyModelProject.TRANSFO_FOLDER);
 			transformationFolder.create(false, true, null);
 		}
 
-		IFolder codegenFolder = project.getFolder("codegen");
+		IFolder codegenFolder = project.getFolder(GenMyModelProject.CODEGEN_FOLDER);
 		codegenFolder.create(false, true, null);
 
-		IFile mtl = project.getFile("codegen/" + name + ".mtl");
+		String mtlName = Introspector.decapitalize(name);
+		IFile mtl = project.getFile(GenMyModelProject.CODEGEN_FOLDER + "/" + mtlName + ".mtl");
 		String str = "[comment encoding = UTF-8 /]\n";
-		str += "[module " + name
+		str += "[module " + mtlName
 				+ "('http://www.eclipse.org/uml2/4.0.0/UML')]\n\n";
 		str += "[template public generate(m : Model)]\n";
 		str += "[comment @main/]\n";
