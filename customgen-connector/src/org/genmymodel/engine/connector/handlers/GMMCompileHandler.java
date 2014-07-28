@@ -2,14 +2,8 @@ package org.genmymodel.engine.connector.handlers;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.HandlerUtil;
-import org.genmymodel.engine.connector.project.GenMyModelProject;
-import org.genmymodel.engine.connector.wizards.compile.ProjectWizard;
+import org.eclipse.core.runtime.jobs.Job;
+import org.genmymodel.engine.connector.jobs.GMMCompileJob;
 
 /**
  * This class provides handler calling GenMyModel API. The GenMyModel service
@@ -32,6 +26,7 @@ public class GMMCompileHandler extends GMMAbstractHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		super.execute(event);
 		
+		/*
 		ISelection selection = HandlerUtil.getCurrentSelection(getCurrentEvent());
 		IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart(); 
 		
@@ -45,6 +40,9 @@ public class GMMCompileHandler extends GMMAbstractHandler {
 		WizardDialog dialog = new WizardDialog( part.getSite().getShell(), wizard);
 		dialog.create();
 		dialog.open();
+		*/
+		Job compile = new GMMCompileJob("Custom generator compilation", getGMMProject());
+		compile.schedule();
 		
 		return null;
 	}

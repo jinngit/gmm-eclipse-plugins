@@ -18,9 +18,13 @@ import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.web.client.RestClientException;
 
 public class GMMLaunchJob extends GMMCustomGenJob {
-
-	public GMMLaunchJob(String name, GenMyModelProject project) {
+	private String modelID;
+	private GMMCredential credential;
+	
+	public GMMLaunchJob(String name, GenMyModelProject project, String modelID, GMMCredential credential) {
 		super(name, project);
+		this.credential = credential;
+		this.modelID = modelID;
 	}
 
 	protected IStatus apiCall(File zip, IProgressMonitor monitor) {
@@ -28,7 +32,7 @@ public class GMMLaunchJob extends GMMCustomGenJob {
 		CompilCallResult res = null;
 		try {
 			try {
-				res = GMMAPIRestClient.getInstance().POSTExec(zip, "_tiPjsFdaEDCmJtgCDSWzkw", new GMMCredential("","")); // TODO
+				res = GMMAPIRestClient.getInstance().POSTExec(zip, modelID, credential);
 			} catch (IOException e) {
 				return blockError(
 						"Error while fetching generation result",

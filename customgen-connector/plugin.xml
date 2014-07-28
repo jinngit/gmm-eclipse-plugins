@@ -36,7 +36,7 @@
             </command>
             <command
                   commandId="org.genmymodel.launch.command"
-                  label="Launch"
+                  label="Launch on..."
                   style="push">
             </command>
          </menu>
@@ -53,7 +53,7 @@
             </command>
             <command
                   commandId="org.genmymodel.launch.commandor"
-                  label="Launch"
+                  label="Launch on..."
                   style="push">
             </command>
          </menu>
@@ -79,6 +79,31 @@
             name="Custom Generator Project"
             project="true">
       </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            delegate="org.genmymodel.engine.connector.runconfig.GMMRunconfigLaunchDelegate"
+            id="org.genmymodel.runconfig.type"
+            modes="run"
+            name="GenMyModel Custom Generator">
+      </launchConfigurationType>
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+      <launchConfigurationTabGroup
+            class="org.genmymodel.engine.connector.runconfig.GMMRunconfigTabGroup"
+            id="org.genmymodel.runconfig.group"
+            type="org.genmymodel.runconfig.type">
+      </launchConfigurationTabGroup>
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+      <launchConfigurationTypeImage
+            configTypeID="org.genmymodel.runconfig.type"
+            icon="icons/gmm.ico"
+            id="org.genmymodel.runconfig.ico">
+      </launchConfigurationTypeImage>
    </extension>
    <!--<extension
       id="wizard"
