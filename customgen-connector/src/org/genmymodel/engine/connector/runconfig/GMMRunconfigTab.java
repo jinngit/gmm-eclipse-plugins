@@ -4,7 +4,9 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
@@ -25,6 +27,8 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.FilteredItemsSelectionDialog;
 import org.eclipse.ui.dialogs.FilteredResourcesSelectionDialog;
+import org.eclipse.ui.statushandlers.StatusManager;
+import org.genmymodel.engine.connector.Activator;
 import org.genmymodel.engine.connector.api.GMMAPIRestClient;
 import org.genmymodel.engine.connector.api.GMMCredential;
 import org.genmymodel.engine.connector.api.ProjectBinding;
@@ -159,7 +163,13 @@ public class GMMRunconfigTab extends AbstractLaunchConfigurationTab {
 				item.setData(project);
 			}
 		} catch (OAuth2AccessDeniedException e) {
-			System.out.println("BAD CREDENTIALS");
+			IStatus err = new Status(
+					Status.ERROR,
+					Activator.PLUGIN_ID,
+					Status.ERROR,
+					"Login/password error\n\tPlease verify your information and be sure that you set a passord for your account.",
+					e);
+			StatusManager.getManager().handle(err, StatusManager.BLOCK);
 		}
 
 	}

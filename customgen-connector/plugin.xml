@@ -18,7 +18,8 @@
       <command
             categoryId="org.genmymodel.category"
             defaultHandler="org.genmymodel.engine.connector.handlers.GMMLaunchHandler"
-            id="org.genmymodel.launch.commandor"
+            description="Creates a custom generator launch configuration"
+            id="org.genmymodel.launch.command"
             name="LaunchCommand">
       </command>
    </extension>
@@ -52,7 +53,7 @@
                   style="push">
             </command>
             <command
-                  commandId="org.genmymodel.launch.commandor"
+                  commandId="org.genmymodel.launch.command"
                   label="Launch on..."
                   style="push">
             </command>
