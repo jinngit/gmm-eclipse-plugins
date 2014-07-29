@@ -43,25 +43,18 @@ public class GMMLaunchJob extends GMMCustomGenJob {
 	 * Calls the API launch service.
 	 */
 	protected IStatus apiCall(File zip, IProgressMonitor monitor) {
-		monitor.subTask("Calling GenMyModel API custom generator launch service...");
+		monitor.subTask(String.format(GMMJobMessages.TASK_APICALL, "launch"));
 		CompilCallResult res = null;
 		try {
 			try {
 				res = GMMAPIRestClient.getInstance().POSTExec(zip, modelID, credential);
 			} catch (IOException e) {
-				return blockError(
-						"Error while fetching generation result",
-						e);
+				return blockError(GMMJobMessages.ERROR_APIFETCH, e);
 			}
 		} catch (OAuth2Exception e) {
-			return blockError(
-					"Wrong credentials, your username or pass is not good.\nYou have to "
-					+ "use a user/pass credential (github and google+ authentications are not supported).",
-					e);
+			return blockError(GMMJobMessages.ERROR_OAUTH, e);
 		} catch (RestClientException e) {
-			return blockError(
-					"Error during service call. If you are connected to the internet, please contact support.",
-					e);
+			return blockError(GMMJobMessages.ERROR_APICALL, e);
 		}
 		monitor.worked(3);
 		
@@ -69,19 +62,15 @@ public class GMMLaunchJob extends GMMCustomGenJob {
 			return nonblockError(res.callResult.getErrors());
 		}
 		
-		monitor.subTask("Dispatching compilation results");
+		monitor.subTask(GMMJobMessages.TASK_EXECRES);
 		try {
 			ZipFile compZip = new ZipFile(res.zip);
 			compZip.extractAll(new File(project.getIProject().getLocationURI()).getAbsolutePath());
 			FileUtils.forceDelete(res.zip);
 		} catch (ZipException e) {
-			return blockError(
-					"Error while dispatching compilation result.",
-					e);
+			return blockError(GMMJobMessages.ERROR_APIDISPATCH, e);
 		} catch (IOException e) {
-			nonBlockWarning("Cannot delete '"
-					+ res.zip.getAbsolutePath()
-					+ "' temp directory. You should delete it by yourself.", e);
+			nonBlockWarning(String.format(GMMJobMessages.ERROR_DELETE, res.zip.getAbsolutePath()), e);
 		}
 		monitor.worked(2);
 		

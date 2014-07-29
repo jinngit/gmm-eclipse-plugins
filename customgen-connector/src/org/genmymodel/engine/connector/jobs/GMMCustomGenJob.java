@@ -45,17 +45,15 @@ public abstract class GMMCustomGenJob extends Job {
 	 */
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
-		monitor.beginTask("Compiling custom generator project", 7);
-		monitor.subTask("Preparing project archive");
+		monitor.beginTask(GMMJobMessages.TASK_COMPEXEC, 7);
+		monitor.subTask(GMMJobMessages.TASK_PREPAREZIP);
 		File zip = null;
 		try {
 			zip = project.zipMe();
 		} catch (Exception e) {
 			e.printStackTrace();
-			return blockError(
-					"Error while preparing your projet archive! Did you have right to write in '"
-							+ GMMAbstractHandler.systemTmpFolder
-							+ "' tmp folder?", e);
+			return blockError(String.format(GMMJobMessages.ERROR_ZIPPREP,
+					GMMAbstractHandler.systemTmpFolder), e);
 		}
 		monitor.worked(1);
 
@@ -65,13 +63,12 @@ public abstract class GMMCustomGenJob extends Job {
 
 		IStatus subw = apiCall(zip, monitor);
 
-		monitor.subTask("Cleaning tmp folders.");
+		monitor.subTask(GMMJobMessages.TASK_CLEANTMP);
 		try {
 			FileUtils.forceDelete(zip.getParentFile());
 		} catch (IOException e) {
-			nonBlockWarning("Cannot delete '"
-					+ zip.getParentFile().getAbsolutePath()
-					+ "' temp directory. You should delete it by yourself.", e);
+			nonBlockWarning(String.format(GMMJobMessages.ERROR_DELETE, zip
+					.getParentFile().getAbsoluteFile()), e);
 		}
 		monitor.worked(1);
 
@@ -83,7 +80,7 @@ public abstract class GMMCustomGenJob extends Job {
 			project.getIProject().refreshLocal(IResource.DEPTH_INFINITE,
 					new NullProgressMonitor());
 		} catch (CoreException e) {
-			return blockError("Error while refreshing your project.", e);
+			return blockError(GMMJobMessages.ERROR_REFRESH, e);
 		}
 
 		return Status.OK_STATUS;

@@ -38,16 +38,14 @@ public class GMMCompileJob extends GMMCustomGenJob {
 	 * Calls the API compile service.
 	 */
 	protected IStatus apiCall(File zip, IProgressMonitor monitor) {
-		monitor.subTask("Calling GenMyModel API custom generator compilation service...");
+		monitor.subTask(String.format(GMMJobMessages.TASK_APICALL, "compilation"));
 		CompilCallResult res = null;
 		try {
 			res = GMMAPIRestClient.getInstance().POSTCompile(zip);
 		} catch (IOException e) {
-			return blockError("Error while fetching compilation result.", e);
+			return blockError(GMMJobMessages.ERROR_APIFETCH, e);
 		} catch (RestClientException e) {
-			return blockError(
-					"Error during service call. If you are connected to the internet, please contact support.",
-					e);
+			return blockError(GMMJobMessages.ERROR_APICALL, e);
 		}
 		monitor.worked(3);
 
@@ -55,17 +53,16 @@ public class GMMCompileJob extends GMMCustomGenJob {
 			return nonblockError(res.callResult.getErrors());
 		}
 
-		monitor.subTask("Dispatching compilation results");
+		monitor.subTask(GMMJobMessages.TASK_COMPILERES);
 		try {
 			ZipFile compZip = new ZipFile(res.zip);
 			compZip.extractAll(new File(project.getIProject().getLocationURI())
 					.getAbsolutePath());
 			FileUtils.forceDelete(res.zip);
 		} catch (ZipException e) {
-			return blockError("Error while dispatching compilation result.", e);
+			return blockError(GMMJobMessages.ERROR_APIDISPATCH, e);
 		} catch (IOException e) {
-			nonBlockWarning("Cannot delete '" + res.zip.getAbsolutePath()
-					+ "' temp directory. You should delete it by yourself.", e);
+			nonBlockWarning(String.format(GMMJobMessages.ERROR_DELETE, res.zip.getAbsolutePath()), e);
 		}
 		monitor.worked(2);
 

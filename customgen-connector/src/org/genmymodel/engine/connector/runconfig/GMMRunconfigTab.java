@@ -44,6 +44,7 @@ import org.springframework.security.oauth2.client.resource.OAuth2AccessDeniedExc
  */
 public class GMMRunconfigTab extends AbstractLaunchConfigurationTab {
 
+	private static final String GID =  "org.genmymodel.runconfig.tab";
 	private Table table;
 	private Text login;
 	private Text password;
@@ -287,7 +288,7 @@ public class GMMRunconfigTab extends AbstractLaunchConfigurationTab {
 	 */
 	@Override
 	public String getId() {
-		return "org.genmymodel.runconfig.tab"; 
+		return GID; 
 	}
 
 }
