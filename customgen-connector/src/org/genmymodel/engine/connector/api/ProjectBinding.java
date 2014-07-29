@@ -2,10 +2,19 @@ package org.genmymodel.engine.connector.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+/**
+ * This class provides a simple implementation that represents a GenMyModel
+ * project abstraction from API.
+ * 
+ * @author Vincent Aranega
+ *
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProjectBinding {
 	private String name;
 	private String projectId;
+	private boolean _public;
+	
 	/**
 	 * @return the name
 	 */
@@ -42,6 +51,5 @@ public class ProjectBinding {
 	public void setPublic(boolean _public) {
 		this._public = _public;
 	}
-	private boolean _public;
 
 }

@@ -24,7 +24,7 @@ public abstract class GMMAbstractHandler extends AbstractHandler {
 
 	protected ExecutionEvent currentEvent;
 	public static File systemTmpFolder;
-	
+
 	static {
 		systemTmpFolder = new File(System.getProperty("java.io.tmpdir"));
 	}
@@ -49,7 +49,9 @@ public abstract class GMMAbstractHandler extends AbstractHandler {
 	}
 
 	/**
-	 * Store the current event when the execute method is called.
+	 * Store the current event when the execute method is called. Each sub-class
+	 * that extends this class <b>MUST</b> call super.execute(event) before it
+	 * can access the GenMyModel project.
 	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		setCurrentEvent(event);
@@ -87,7 +89,13 @@ public abstract class GMMAbstractHandler extends AbstractHandler {
 	protected IProject extractProject() {
 		return extractSelection().getProject();
 	}
-	
+
+	/**
+	 * Returns the GenMyModel project handled by this handler. The GenMyModel
+	 * project is set each time the "execute" method is call.
+	 * 
+	 * @return The current GenMyModel project.
+	 */
 	protected GenMyModelProject getGMMProject() {
 		return new GenMyModelProject(extractProject());
 	}

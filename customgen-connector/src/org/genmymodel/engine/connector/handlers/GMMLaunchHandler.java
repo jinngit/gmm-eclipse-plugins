@@ -16,8 +16,8 @@ import org.eclipse.ui.PlatformUI;
 import org.genmymodel.engine.connector.runconfig.GMMRunconfigConstant;
 
 /**
- * This class provides handler calling GenMyModel API. The GenMyModel service
- * called allows one to launch its previously compiled project.
+ * This class provides handler calling GenMyModel API. This handler creates
+ * a launch configuration and shows it in the launch configuration dialog.
  * 
  * @author Vincent Aranega
  */
@@ -30,23 +30,32 @@ public class GMMLaunchHandler extends GMMAbstractHandler {
 	}
 
 	/**
-	 * the command has been executed, so extract extract the needed information
-	 * from the application context.
+	 * {@inheritDoc} Opens the launch configuration dialog with a pre-configured
+	 * launch configuration.
 	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		super.execute(event);
 
 		try {
-			IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart(); 
-			ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
-			ILaunchConfigurationType type = manager.getLaunchConfigurationType(GMMRunconfigConstant.GENMYMODEL_RUNCONF_TYPE);
-			ILaunchConfigurationWorkingCopy workingCopy = type.newInstance(null, "New Configuration (" + java.util.UUID.randomUUID() +")");
+			IWorkbenchPart part = PlatformUI.getWorkbench()
+					.getActiveWorkbenchWindow().getActivePage().getActivePart();
+			ILaunchManager manager = DebugPlugin.getDefault()
+					.getLaunchManager();
+			ILaunchConfigurationType type = manager
+					.getLaunchConfigurationType(GMMRunconfigConstant.GENMYMODEL_RUNCONF_TYPE);
+			ILaunchConfigurationWorkingCopy workingCopy = type.newInstance(
+					null, "New Configuration (" + java.util.UUID.randomUUID()
+							+ ")");
 
-			workingCopy.setAttribute(GMMRunconfigConstant.CUSTOMGEN_PROJECT, getGMMProject().getIProject().getName());
-			workingCopy.setModes(Collections.singleton(ILaunchManager.RUN_MODE));
+			workingCopy.setAttribute(GMMRunconfigConstant.CUSTOMGEN_PROJECT,
+					getGMMProject().getIProject().getName());
+			workingCopy
+					.setModes(Collections.singleton(ILaunchManager.RUN_MODE));
 			ILaunchConfiguration configuration = workingCopy.doSave();
-			
-			DebugUITools.openLaunchConfigurationDialog(part.getSite().getShell(), configuration, "org.eclipse.debug.ui.launchGroup.run", null);
+
+			DebugUITools.openLaunchConfigurationDialog(part.getSite()
+					.getShell(), configuration,
+					"org.eclipse.debug.ui.launchGroup.run", null);
 		} catch (CoreException e) {
 		}
 

@@ -16,6 +16,12 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+/**
+ * 
+ * @author Ali Gourch
+ * @author Vincent Aranega
+ *
+ */
 public class NewCustomgenProjectWizardPage extends WizardPage {
 	private Text nameWidget;
 	private Button metamodelWidget;
@@ -34,6 +40,7 @@ public class NewCustomgenProjectWizardPage extends WizardPage {
 	/**
 	 * @see IDialogPage#createControl(Composite)
 	 */
+	@Override
 	public void createControl(Composite parent) {
 		model = ((NewCustomgenProjectWizard) getWizard()).model;
 		
@@ -71,6 +78,9 @@ public class NewCustomgenProjectWizardPage extends WizardPage {
 		addListeners();
 	}
 
+	/**
+	 * Adds widget listeners.
+	 */
 	private void addListeners() {
 		nameWidget.addModifyListener(new ModifyListener() {
 

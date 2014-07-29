@@ -7,6 +7,12 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 
+/**
+ * Custom generator new project wizard.
+ * 
+ * @author Vincent Aranega
+ *
+ */
 public class NewCustomgenProjectWizard extends Wizard implements INewWizard {
 	NewCustomgenProjectWizardModel model;
 
@@ -15,6 +21,10 @@ public class NewCustomgenProjectWizard extends Wizard implements INewWizard {
 		model = new NewCustomgenProjectWizardModel();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void addPages() {
 		addPage(new NewCustomgenProjectWizardPage());
 	}
@@ -26,10 +36,18 @@ public class NewCustomgenProjectWizard extends Wizard implements INewWizard {
 
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public boolean canFinish() {
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public boolean performFinish() {
 		try {
 			model.createProject();

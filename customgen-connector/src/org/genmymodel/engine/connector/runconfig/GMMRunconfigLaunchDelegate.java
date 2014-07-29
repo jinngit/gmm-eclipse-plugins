@@ -13,8 +13,19 @@ import org.genmymodel.engine.connector.api.GMMCredential;
 import org.genmymodel.engine.connector.jobs.GMMLaunchJob;
 import org.genmymodel.engine.connector.project.GenMyModelProject;
 
+/**
+ * This class provides facilities to launch a custom generation execution.
+ * 
+ * @author Vincent Aranega
+ * @author Ali Gourch
+ *
+ */
 public class GMMRunconfigLaunchDelegate implements ILaunchConfigurationDelegate {
 
+	/**
+	 * {@inheritDoc}
+	 * It simply call the already existing launch job.
+	 */
 	@Override
 	public void launch(ILaunchConfiguration configuration, String mode,
 			ILaunch launch, IProgressMonitor monitor) throws CoreException {

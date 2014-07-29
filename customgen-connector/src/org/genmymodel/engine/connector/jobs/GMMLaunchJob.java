@@ -17,16 +17,31 @@ import org.genmymodel.engine.connector.project.GenMyModelProject;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.web.client.RestClientException;
 
+/**
+ * 
+ * @author Vincent Aranega
+ * @author Ali Gourch
+ *
+ */
 public class GMMLaunchJob extends GMMCustomGenJob {
 	private String modelID;
 	private GMMCredential credential;
 	
+	/**
+	 * Creates a launch job.
+	 * @param name The launch job name.
+	 * @param project The GenMyModel project.
+	 */
 	public GMMLaunchJob(String name, GenMyModelProject project, String modelID, GMMCredential credential) {
 		super(name, project);
 		this.credential = credential;
 		this.modelID = modelID;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Calls the API launch service.
+	 */
 	protected IStatus apiCall(File zip, IProgressMonitor monitor) {
 		monitor.subTask("Calling GenMyModel API custom generator launch service...");
 		CompilCallResult res = null;

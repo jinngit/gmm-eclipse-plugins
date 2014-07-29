@@ -17,34 +17,19 @@ public class GMMCompileHandler extends GMMAbstractHandler {
 	/**
 	 * The constructor.
 	 */
-	public GMMCompileHandler() {}
+	public GMMCompileHandler() {
+	}
 
 	/**
-	 * the command has been executed, so extract extract the needed information
-	 * from the application context.
+	 * {@inheritDoc} Launches the compilation process.
 	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		super.execute(event);
-		
-		/*
-		ISelection selection = HandlerUtil.getCurrentSelection(getCurrentEvent());
-		IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart(); 
-		
-		System.out.println("getGMMProject() "+ getGMMProject());
-		GenMyModelProject project = getGMMProject();
-		ProjectWizard wizard = new ProjectWizard(project);
-		if ((selection instanceof IStructuredSelection) || (selection == null))
-		wizard.init(part.getSite().getWorkbenchWindow().getWorkbench(), 
-			(IStructuredSelection)selection);
-			
-		WizardDialog dialog = new WizardDialog( part.getSite().getShell(), wizard);
-		dialog.create();
-		dialog.open();
-		*/
-		Job compile = new GMMCompileJob("Custom generator compilation", getGMMProject());
+
+		Job compile = new GMMCompileJob("Custom generator compilation",
+				getGMMProject());
 		compile.schedule();
-		
+
 		return null;
 	}
-}
-;
+};

@@ -3,110 +3,60 @@ package org.genmymodel.engine.connector.api;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
+ * This class represents a result obtained from an API call.
+ * 
  * @author Vincent Aranega
  */
-public class GMMCallResult
-{
-	public enum Status
-	{
-		/**
-		 * Indicates a generation as failed.
-		 * It can be a compilation error, a project
-		 * not found or other errors.
-		 */
-		FAILED,
-		
-		/**
-		 * Indicates a generation succeed. A successful
-		 * generation does not implies that
-		 * no warning have been raised during generation.
-		 */
-		SUCCESS
-	}
-	
-	protected java.util.Date						creationDate;
-	protected Status								status;
-	protected String								message;
-	protected String								outputUrl;
-	protected Map<String, List<String>>	errors;
-	protected Map<String, List<String>>	warnings;
-	
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class GMMCallResult {
+	protected String outputUrl;
+	protected Map<String, List<String>> errors;
+	protected Map<String, List<String>> warnings;
+
 	/**
-	 * Returns the report creation date.
-	 * @return a {@link java.util.Date}.
+	 * Gets the result output URL.
+	 * @return the result URL.
 	 */
-	public java.util.Date getCreationDate()
-	{
-		return creationDate;
-	}
-	
-	public void setCreationDate(java.util.Date creationDate)
-	{
-		this.creationDate = creationDate;
-	}
-	
-	/**
-	 * Returns the status of the generation.
-	 * @return a status that indicates if the
-	 *         generation succeed or failed.
-	 * @see Status#SUCCESS
-	 * @see Status#FAILED
-	 */
-	public Status getStatus()
-	{
-		return status;
-	}
-	
-	public void setStatus(Status status)
-	{
-		this.status = status;
-	}
-	
-	public String getMessage()
-	{
-		return message;
-	}
-	
-	public void setMessage(String message)
-	{
-		this.message = message;
-	}
-	
-	public String getOutputUrl()
-	{
+	public String getOutputUrl() {
 		return outputUrl;
 	}
-	
-	public void setOutputUrl(String outputUrl)
-	{
+
+	/**
+	 * Sets the result output URL.
+	 * @param outputUrl The result URL.
+	 */
+	public void setOutputUrl(String outputUrl) {
 		this.outputUrl = outputUrl;
 	}
-	
-	public void setWarnings(Map<String, List<String>> warnings)
-	{
+
+	/**
+	 * Sets a map containing warnings that has
+	 * occured during the API call.
+	 * @param warnings the warning map.
+	 */
+	public void setWarnings(Map<String, List<String>> warnings) {
 		this.warnings = warnings;
 	}
-	
-	public void setErrors(Map<String, List<String>> errors)
-	{
+
+	public void setErrors(Map<String, List<String>> errors) {
 		this.errors = errors;
 	}
-	
-	public Map<String, List<String>> getWarnings()
-	{
+
+	public Map<String, List<String>> getWarnings() {
 		return warnings;
 	}
-	
-	public Map<String, List<String>> getErrors()
-	{
+
+	public Map<String, List<String>> getErrors() {
 		return errors;
 	}
-	
+
 	public boolean hasErrors() {
 		return getErrors() != null && !getErrors().isEmpty();
 	}
-	
+
 	public boolean hasWarnings() {
 		return getWarnings() != null && !getWarnings().isEmpty();
 	}

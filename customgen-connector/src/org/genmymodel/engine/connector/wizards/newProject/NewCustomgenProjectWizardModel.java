@@ -12,6 +12,12 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.genmymodel.engine.connector.project.GenMyModelProject;
 
+/**
+ * 
+ * @author Ali Gourch
+ * @author Vincent Aranega
+ *
+ */
 public class NewCustomgenProjectWizardModel {
 	protected String name;
 	protected boolean metamodel;

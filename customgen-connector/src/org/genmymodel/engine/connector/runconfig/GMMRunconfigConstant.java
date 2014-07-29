@@ -1,5 +1,11 @@
 package org.genmymodel.engine.connector.runconfig;
 
+/**
+ * Constants used by the run configuration tab/launcher.
+ * 
+ * @author Vincent Aranega
+ *
+ */
 public interface GMMRunconfigConstant {
 	public final static String GENMYMODEL_RUNCONF_PREFIX = "org.genmymodel.runconfig.";
 	public final static String CUSTOMGEN_PROJECT = GENMYMODEL_RUNCONF_PREFIX + "CUSTOMGEN_PROJECT";

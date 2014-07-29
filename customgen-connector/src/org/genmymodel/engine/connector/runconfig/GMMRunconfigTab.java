@@ -10,6 +10,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -34,6 +35,13 @@ import org.genmymodel.engine.connector.api.GMMCredential;
 import org.genmymodel.engine.connector.api.ProjectBinding;
 import org.springframework.security.oauth2.client.resource.OAuth2AccessDeniedException;
 
+/**
+ * The custom generator run configuration tab in run configuration dialog.
+ * 
+ * @author Ali Gourch
+ * @author Vincent Aranega
+ *
+ */
 public class GMMRunconfigTab extends AbstractLaunchConfigurationTab {
 
 	private Table table;
@@ -44,9 +52,12 @@ public class GMMRunconfigTab extends AbstractLaunchConfigurationTab {
 	private Button browse;
 	private String modelID;
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void createControl(Composite parent) {
-		Composite root = new Composite(parent, SWT.NULL);
+		final Composite root = new Composite(parent, SWT.NULL);
 		setControl(root);
 		GridLayout grid = new GridLayout();
 		grid.marginTop = 10;
@@ -143,7 +154,10 @@ public class GMMRunconfigTab extends AbstractLaunchConfigurationTab {
 		refresh.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				ProgressMonitorDialog mon = new ProgressMonitorDialog(root.getShell());
+				mon.open();
 				populateProjectTable();
+				mon.close();
 			}
 
 			@Override
@@ -153,8 +167,14 @@ public class GMMRunconfigTab extends AbstractLaunchConfigurationTab {
 
 	}
 
+	/**
+	 * Populate the project table with user information.
+	 */
 	private void populateProjectTable() {
 		GMMCredential credential = new GMMCredential(login.getText(), password.getText());
+		for (TableItem item : table.getItems()) {
+			item.dispose();
+		}
 		try {
 			ProjectBinding [] projects = GMMAPIRestClient.getInstance().GETMyProjects(credential);
 			for (ProjectBinding project : projects) {
@@ -173,7 +193,10 @@ public class GMMRunconfigTab extends AbstractLaunchConfigurationTab {
 		}
 
 	}
-
+	
+	/**
+	 * Handles the project browse button.
+	 */
 	private void handleBrowse() {
 		FilteredItemsSelectionDialog dialog = new FilteredResourcesSelectionDialog(getShell(), false,
 				ResourcesPlugin.getWorkspace().getRoot(), IResource.PROJECT);
@@ -191,11 +214,17 @@ public class GMMRunconfigTab extends AbstractLaunchConfigurationTab {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration) {
 
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void initializeFrom(ILaunchConfiguration configuration) {
 		try {
@@ -221,6 +250,9 @@ public class GMMRunconfigTab extends AbstractLaunchConfigurationTab {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
 		configuration.setAttribute(GMMRunconfigConstant.CUSTOMGEN_PROJECT, project.getText());
@@ -229,11 +261,17 @@ public class GMMRunconfigTab extends AbstractLaunchConfigurationTab {
 		configuration.setAttribute(GMMRunconfigConstant.PASSWORD, password.getText());
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String getName() {
 		return "&Project selection";
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean isValid(ILaunchConfiguration config) {
 		boolean projectOK = project.getText() != null
@@ -244,6 +282,9 @@ public class GMMRunconfigTab extends AbstractLaunchConfigurationTab {
 		return projectOK && modelidOK;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String getId() {
 		return "org.genmymodel.runconfig.tab"; 

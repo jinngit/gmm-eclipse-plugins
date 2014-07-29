@@ -16,7 +16,10 @@ import org.eclipse.core.resources.IProject;
 
 
 /**
- * This class provides an IProject encapsulation.
+ * This class provides an IProject wrapper. It represents
+ * a GenMyModel custom generator project.
+ * 
+ * @author Vincent Aranega
  */
 public class GenMyModelProject {
 	public final static String CODEGEN_FOLDER = "codegen";
@@ -37,46 +40,92 @@ public class GenMyModelProject {
 		}*/
 	}
 
+	/**
+	 * Gets the wrapped IProject.
+	 * @return An IProject.
+	 */
 	public IProject getIProject() {
 		return handledProject;
 	}
 
+	/**
+	 * Sets the wrapped IProject.
+	 * @param handledProject The IProject to wrap.
+	 */
 	public void setIProject(IProject handledProject) {
 		this.handledProject = handledProject;
 	}
 	
+	/**
+	 * Gets the folder that contains code generation script.
+	 * @return The codegen IFolder.
+	 */
 	public IFolder getCodegenFolder() {
 		return getIProject().getFolder(CODEGEN_FOLDER);
 	}
 	
+	/**
+	 * Checks if the codegen folder exists.
+	 * @return True if the codegen folder exists.
+	 */
 	public boolean codegenFolderExist() {
 		return getCodegenFolder().exists();
 	}
 	
+	/**
+	 * Gets the folder that contains intermediate metamodels.
+	 * @return The metamodels IFolder.
+	 */
 	public IFolder getMetamodelsFolder() {
 		return getIProject().getFolder(METAMODEL_FOLDER);
 	}
 	
+	/**
+	 * Checks if the metamodels folder exists.
+	 * @return True if the metamodels folder exists.
+	 */
 	public boolean metamodelsFolderExist() {
 		return getMetamodelsFolder().exists();
 	}
 	
+	/**
+	 * Gets the folder that contains model to model transformations.
+	 * @return The transformations IFolder.
+	 */
 	public IFolder getTransformationsFolder() {
 		return getIProject().getFolder(TRANSFO_FOLDER);
 	}
 	
+	/**
+	 * Checks if the transformations folder exists.
+	 * @return True if the transformations folder exists.
+	 */
 	public boolean tranformationsFolderExist() {
 		return getTransformationsFolder().exists();
 	}
 	
+	/**
+	 * Gets the generator.xml file.
+	 * @return The generator.xml IFile.
+	 */
 	public IFile getGeneratorXMLFile() {
 		return getIProject().getFile(GENERATOR_XML);
 	}
 	
+	/**
+	 * Checks if the generator.xml exists.
+	 * @return True if the generator.xml exists.
+	 */
 	public boolean generatorXMLExist() {
 		return getGeneratorXMLFile().exists();
 	}
 	
+	/**
+	 * Zips a GenMyModel project.
+	 * @return A File representing the created zip.
+	 * @throws IOException If an I/O error occurs.
+	 * @throws ZipException If an error occurs during file zipping.
+	 */
 	public File zipMe() throws IOException, ZipException {
 		File tmpFolder = Files.createTempDirectory("GMM-").toFile();
 		String destFolder = tmpFolder.getAbsolutePath() + "/" + getIProject().getName();
