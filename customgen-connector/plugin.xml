@@ -69,7 +69,7 @@
       <category
             id="org.genmymodel.newproject.page"
             name="Custom Generator Project"
-            parentCategory="gmmNProjectParent">
+            parentCategory="org.genmymodel.newproject.category">
       </category>
       <wizard
             category="org.genmymodel.newproject.category/org.genmymodel.newproject.page"
