@@ -23,6 +23,7 @@
 	<modules>
 		<module>org.genmymodel.plugin.customgen</module>
 		<module>org.genmymodel.plugin.common</module>
+		<module>org.genmymodel.plugin.resource</module>
 	</modules>
 
 
