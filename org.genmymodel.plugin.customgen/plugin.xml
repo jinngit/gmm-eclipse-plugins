@@ -5,21 +5,21 @@
    <extension
          point="org.eclipse.ui.commands">
       <category
-            id="org.genmymodel.category"
+            id="org.genmymodel.customgen.category"
             name="GenMyModel Engine Connector">
       </category>
       <command
-            categoryId="org.genmymodel.category"
+            categoryId="org.genmymodel.customgen.category"
             defaultHandler="org.genmymodel.customgen.handlers.GMMCompileHandler"
             description="Compiles the selected custom generator project (MTL compilation)."
-            id="org.genmymodel.compile.command"
+            id="org.genmymodel.customgen.compile.command"
             name="CompileCommand">
       </command>
       <command
-            categoryId="org.genmymodel.category"
+            categoryId="org.genmymodel.customgen.category"
             defaultHandler="org.genmymodel.customgen.handlers.GMMLaunchHandler"
             description="Creates a custom generator launch configuration"
-            id="org.genmymodel.launch.command"
+            id="org.genmymodel.customgen.launch.command"
             name="LaunchCommand">
       </command>
    </extension>
@@ -31,12 +31,12 @@
          <menu
                label="GenMyModel">
             <command
-                  commandId="org.genmymodel.compile.command"
+                  commandId="org.genmymodel.customgen.compile.command"
                   label="Compile"
                   style="push">
             </command>
             <command
-                  commandId="org.genmymodel.launch.command"
+                  commandId="org.genmymodel.customgen.launch.command"
                   label="Launch on..."
                   style="push">
             </command>
@@ -48,12 +48,12 @@
          <menu
                label="GenMyModel">
             <command
-                  commandId="org.genmymodel.compile.command"
+                  commandId="org.genmymodel.customgen.compile.command"
                   label="Compile"
                   style="push">
             </command>
             <command
-                  commandId="org.genmymodel.launch.command"
+                  commandId="org.genmymodel.customgen.launch.command"
                   label="Launch on..."
                   style="push">
             </command>
@@ -63,20 +63,20 @@
    <extension
          point="org.eclipse.ui.newWizards">
       <category
-            id="org.genmymodel.newproject.category"
+            id="org.genmymodel.customgen.newproject.category"
             name="GenMyModel">
       </category>
       <category
-            id="org.genmymodel.newproject.page"
+            id="org.genmymodel.customgen.newproject.page"
             name="Custom Generator Project"
-            parentCategory="org.genmymodel.newproject.category">
+            parentCategory="org.genmymodel.customgen.newproject.category">
       </category>
       <wizard
-            category="org.genmymodel.newproject.category/org.genmymodel.newproject.page"
+            category="org.genmymodel.customgen.newproject.category/org.genmymodel.customgen.newproject.page"
             class="org.genmymodel.customgen.wizards.newProject.NewCustomgenProjectWizard"
             hasPages="true"
             icon="icons/gmm.ico"
-            id="org.genmymodel.newproject.wizard"
+            id="org.genmymodel.customgen.newproject.wizard"
             name="Custom Generator Project"
             project="true">
       </wizard>
@@ -85,7 +85,7 @@
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
             delegate="org.genmymodel.customgen.runconfig.GMMRunconfigLaunchDelegate"
-            id="org.genmymodel.runconfig.type"
+            id="org.genmymodel.customgen.runconfig.type"
             modes="run"
             name="GenMyModel Custom Generator">
       </launchConfigurationType>
@@ -94,16 +94,16 @@
          point="org.eclipse.debug.ui.launchConfigurationTabGroups">
       <launchConfigurationTabGroup
             class="org.genmymodel.customgen.runconfig.GMMRunconfigTabGroup"
-            id="org.genmymodel.runconfig.group"
-            type="org.genmymodel.runconfig.type">
+            id="org.genmymodel.customgen.runconfig.group"
+            type="org.genmymodel.customgen.runconfig.type">
       </launchConfigurationTabGroup>
    </extension>
    <extension
          point="org.eclipse.debug.ui.launchConfigurationTypeImages">
       <launchConfigurationTypeImage
-            configTypeID="org.genmymodel.runconfig.type"
+            configTypeID="org.genmymodel.customgen.runconfig.type"
             icon="icons/gmm.ico"
-            id="org.genmymodel.runconfig.ico">
+            id="org.genmymodel.customgen.runconfig.ico">
       </launchConfigurationTypeImage>
    </extension>
 </plugin>
