@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="org.genmymodel.category"
+            name="GenMyModel Engine Connector">
+      </category>
+      <command
+            categoryId="org.genmymodel.category"
+            defaultHandler="org.genmymodel.customgen.handlers.GMMCompileHandler"
+            description="Compiles the selected custom generator project (MTL compilation)."
+            id="org.genmymodel.compile.command"
+            name="CompileCommand">
+      </command>
+      <command
+            categoryId="org.genmymodel.category"
+            defaultHandler="org.genmymodel.customgen.handlers.GMMLaunchHandler"
+            description="Creates a custom generator launch configuration"
+            id="org.genmymodel.launch.command"
+            name="LaunchCommand">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="true"
+            locationURI="popup:org.eclipse.jdt.ui.PackageExplorer">
+         <menu
+               label="GenMyModel">
+            <command
+                  commandId="org.genmymodel.compile.command"
+                  label="Compile"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.genmymodel.launch.command"
+                  label="Launch on..."
+                  style="push">
+            </command>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            allPopups="true"
+            locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=additions">
+         <menu
+               label="GenMyModel">
+            <command
+                  commandId="org.genmymodel.compile.command"
+                  label="Compile"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.genmymodel.launch.command"
+                  label="Launch on..."
+                  style="push">
+            </command>
+         </menu>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="org.genmymodel.newproject.category"
+            name="GenMyModel">
+      </category>
+      <category
+            id="org.genmymodel.newproject.page"
+            name="Custom Generator Project"
+            parentCategory="org.genmymodel.newproject.category">
+      </category>
+      <wizard
+            category="org.genmymodel.newproject.category/org.genmymodel.newproject.page"
+            class="org.genmymodel.customgen.wizards.newProject.NewCustomgenProjectWizard"
+            hasPages="true"
+            icon="icons/gmm.ico"
+            id="org.genmymodel.newproject.wizard"
+            name="Custom Generator Project"
+            project="true">
+      </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            delegate="org.genmymodel.customgen.runconfig.GMMRunconfigLaunchDelegate"
+            id="org.genmymodel.runconfig.type"
+            modes="run"
+            name="GenMyModel Custom Generator">
+      </launchConfigurationType>
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+      <launchConfigurationTabGroup
+            class="org.genmymodel.customgen.runconfig.GMMRunconfigTabGroup"
+            id="org.genmymodel.runconfig.group"
+            type="org.genmymodel.runconfig.type">
+      </launchConfigurationTabGroup>
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+      <launchConfigurationTypeImage
+            configTypeID="org.genmymodel.runconfig.type"
+            icon="icons/gmm.ico"
+            id="org.genmymodel.runconfig.ico">
+      </launchConfigurationTypeImage>
+   </extension>
+</plugin>

@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.genmymodel.engine</groupId>
+	<groupId>org.genmymodel.plugin</groupId>
 	<artifactId>connector-parent</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
@@ -21,7 +21,8 @@
 	</repositories>
 
 	<modules>
-		<module>customgen-connector</module>
+		<module>org.genmymodel.plugin.customgen</module>
+		<module>org.genmymodel.plugin.common</module>
 	</modules>
 
 
