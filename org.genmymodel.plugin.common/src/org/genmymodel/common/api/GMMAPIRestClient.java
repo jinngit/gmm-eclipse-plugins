@@ -30,12 +30,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  *
  */
 public class GMMAPIRestClient {
-	public static final String API_URL = "https://enginepreprodks.genmymodel.com";
 	public static final String REAL_API = "https://apipreprodks.genmymodel.com"; 
 	public static final String OAUTH_TOK = REAL_API  + "/oauth/token";
 	public static final String USER_PROJECTS = REAL_API + "/users/{username}/projects";
-	public static final String COMPILE_RESTURL = API_URL + "/mtl/compile";
-	public static final String EXEC_RESTURL_FRAG = API_URL + "/mtl/exec/";
+	public static final String COMPILE_RESTURL = REAL_API + "/customgenerators/dev/compile";
+	public static final String EXEC_RESTURL_FRAG = REAL_API + "/customgenerators/dev/execute/";
 	private static final String CLIENT_ID = "test";
 	private static final String CLIENT_SECRET = "test";
 

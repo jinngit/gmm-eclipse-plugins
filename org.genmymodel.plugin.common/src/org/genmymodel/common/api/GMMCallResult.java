@@ -12,30 +12,37 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GMMCallResult {
-	protected String outputUrl;
+	private static final String OUTPUT_URL = "output";
+	protected List<Href> links;
 	protected Map<String, List<String>> errors;
 	protected Map<String, List<String>> warnings;
 
 	/**
-	 * Gets the result output URL.
-	 * @return the result URL.
+	 * Required empty constructor
 	 */
-	public String getOutputUrl() {
-		return outputUrl;
+	public GMMCallResult() {
 	}
 
 	/**
-	 * Sets the result output URL.
-	 * @param outputUrl The result URL.
+	 * @return the links
 	 */
-	public void setOutputUrl(String outputUrl) {
-		this.outputUrl = outputUrl;
+	public List<Href> getLinks() {
+		return links;
 	}
 
 	/**
-	 * Sets a map containing warnings that has
-	 * occured during the API call.
-	 * @param warnings the warning map.
+	 * @param links
+	 *            the links to set
+	 */
+	public void setLinks(List<Href> links) {
+		this.links = links;
+	}
+
+	/**
+	 * Sets a map containing warnings that has occured during the API call.
+	 * 
+	 * @param warnings
+	 *            the warning map.
 	 */
 	public void setWarnings(Map<String, List<String>> warnings) {
 		this.warnings = warnings;
@@ -59,5 +66,36 @@ public class GMMCallResult {
 
 	public boolean hasWarnings() {
 		return getWarnings() != null && !getWarnings().isEmpty();
+	}
+	
+	public String getOutputUrl() {
+		for (Href href : links) {
+			if (OUTPUT_URL.equals(href.getRel())) {
+				return href.getHref();
+			}
+		}
+		
+		return null;
+	}
+
+	public static class Href {
+		private String rel;
+		private String href;
+
+		public String getRel() {
+			return rel;
+		}
+
+		public void setRel(String rel) {
+			this.rel = rel;
+		}
+
+		public String getHref() {
+			return href;
+		}
+
+		public void setHref(String href) {
+			this.href = href;
+		}
 	}
 }
