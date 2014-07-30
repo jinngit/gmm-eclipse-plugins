@@ -1,4 +1,4 @@
-package org.genmymodel.customgen.api;
+package org.genmymodel.common.api;
 
 /**
  * This class represents a simple credential implementation.

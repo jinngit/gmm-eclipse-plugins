@@ -10,8 +10,8 @@ import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.genmymodel.customgen.api.GMMAPIRestClient;
-import org.genmymodel.customgen.api.GMMAPIRestClient.CompilCallResult;
+import org.genmymodel.common.api.GMMAPIRestClient;
+import org.genmymodel.common.api.GMMAPIRestClient.CompilCallResult;
 import org.genmymodel.customgen.project.GenMyModelProject;
 import org.springframework.web.client.RestClientException;
 

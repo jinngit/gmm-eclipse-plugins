@@ -1,4 +1,4 @@
-package org.genmymodel.plugin.common;
+package org.genmymodel.common;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;

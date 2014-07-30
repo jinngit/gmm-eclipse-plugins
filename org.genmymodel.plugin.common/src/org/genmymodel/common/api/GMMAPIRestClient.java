@@ -1,4 +1,4 @@
-package org.genmymodel.customgen.api;
+package org.genmymodel.common.api;
 
 import java.io.File;
 import java.io.IOException;

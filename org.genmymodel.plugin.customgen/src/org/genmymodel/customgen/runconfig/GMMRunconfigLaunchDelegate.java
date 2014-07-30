@@ -9,7 +9,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.ILaunchConfigurationDelegate;
-import org.genmymodel.customgen.api.GMMCredential;
+import org.genmymodel.common.api.GMMCredential;
 import org.genmymodel.customgen.jobs.GMMLaunchJob;
 import org.genmymodel.customgen.project.GenMyModelProject;
 

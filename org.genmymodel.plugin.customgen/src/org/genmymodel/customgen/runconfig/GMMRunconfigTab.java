@@ -29,10 +29,10 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.FilteredItemsSelectionDialog;
 import org.eclipse.ui.dialogs.FilteredResourcesSelectionDialog;
 import org.eclipse.ui.statushandlers.StatusManager;
+import org.genmymodel.common.api.GMMAPIRestClient;
+import org.genmymodel.common.api.GMMCredential;
+import org.genmymodel.common.api.ProjectBinding;
 import org.genmymodel.customgen.Activator;
-import org.genmymodel.customgen.api.GMMAPIRestClient;
-import org.genmymodel.customgen.api.GMMCredential;
-import org.genmymodel.customgen.api.ProjectBinding;
 import org.springframework.security.oauth2.client.resource.OAuth2AccessDeniedException;
 
 /**

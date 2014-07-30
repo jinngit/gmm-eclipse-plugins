@@ -1,4 +1,4 @@
-package org.genmymodel.customgen.api;
+package org.genmymodel.common.api;
 
 import java.util.List;
 import java.util.Map;
