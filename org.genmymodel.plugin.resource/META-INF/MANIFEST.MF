@@ -1,12 +1,14 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: GenMyModel Resource Utility
-Bundle-SymbolicName: org.genmymodel.plugin.resource
+Bundle-SymbolicName: org.genmymodel.plugin.resource;singleton:=true
 Bundle-Version: 0.0.1.qualifier
 Bundle-Activator: org.genmymodel.plugin.resource.Activator
 Bundle-Vendor: GenMyModel
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.genmymodel.plugin.common
+ org.genmymodel.plugin.common,
+ org.eclipse.emf.ecore;bundle-version="2.10.0",
+ org.eclipse.emf.ecore.xmi;bundle-version="2.10.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy

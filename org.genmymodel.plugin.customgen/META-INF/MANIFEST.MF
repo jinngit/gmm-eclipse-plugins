@@ -12,8 +12,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.debug.core,
  org.eclipse.debug.ui,
  org.eclipse.ui.ide,
- org.eclipse.jdt.debug.ui,
- org.genmymodel.plugin.common
+ org.eclipse.jdt.debug.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
