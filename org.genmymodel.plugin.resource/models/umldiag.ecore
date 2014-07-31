@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="uml" nsURI="http://com.genmymodel.ecoreonline.graphic.uml/1.0"
+    nsPrefix="com.genmymodel.graphic.uml">
+  <eClassifiers xsi:type="ecore:EClass" name="ClassWidget" eSuperTypes="#//ClassifierWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="AssociationSegment" eSuperTypes="graphic.ecore#//SegmentWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="GeneralizationSegment" eSuperTypes="graphic.ecore#//SegmentWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PropertyWidget" eSuperTypes="#//NamedElementWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="OperationWidget" eSuperTypes="#//NamedElementWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="EnumerationWidget" eSuperTypes="#//ClassifierWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="EnumerationLiteralWidget" eSuperTypes="#//NamedElementWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ActorWidget" eSuperTypes="#//ClassifierWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="MemberEndNameWidget" eSuperTypes="#//MemberEndWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="MemberEndMultiplicityWidget" eSuperTypes="#//MemberEndWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="TypeWidget" abstract="true" eSuperTypes="#//NamedElementWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ClassifierWidget" abstract="true" eSuperTypes="#//TypeWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ParameterWidget" eSuperTypes="#//NamedElementWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ClassDiagram" eSuperTypes="graphic.ecore#//GWTDiagram"/>
+  <eClassifiers xsi:type="ecore:EClass" name="UsecaseDiagram" eSuperTypes="graphic.ecore#//GWTDiagram"/>
+  <eClassifiers xsi:type="ecore:EClass" name="MemberEndWidget" abstract="true" eSuperTypes="graphic.ecore#//LabelWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="AssociationNameWidget" eSuperTypes="graphic.ecore#//LabelWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="NamedElementWidget" abstract="true"
+      eSuperTypes="graphic.ecore#//NodeWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="UseCaseWidget" eSuperTypes="#//ClassifierWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="InterfaceWidget" eSuperTypes="#//ClassifierWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="InterfaceRealizationSegment" eSuperTypes="graphic.ecore#//SegmentWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="CommentWidget" eSuperTypes="graphic.ecore#//NodeWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ExtendSegment" eSuperTypes="graphic.ecore#//SegmentWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="IncludeSegment" eSuperTypes="graphic.ecore#//SegmentWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="AnnotedElementSegement" eSuperTypes="graphic.ecore#//SegmentWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ExtensionPointWidget" eSuperTypes="#//NamedElementWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ComponentUseCaseWidget" eSuperTypes="#//ClassifierWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PackageWidget" eSuperTypes="#//NamedElementWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="DataTypeWidget" eSuperTypes="#//ClassifierWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SubjectWidget" eSuperTypes="#//ClassifierWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="DependencySegment" eSuperTypes="graphic.ecore#//SegmentWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="StaticLabelWidget" eSuperTypes="graphic.ecore#//StaticLabelWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ActivityDiagram" eSuperTypes="graphic.ecore#//GWTDiagram"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ActivityNodeWidget" abstract="true"
+      eSuperTypes="#//NamedElementWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ControlNodeWidget" abstract="true" eSuperTypes="#//ActivityNodeWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="InitialNodeWidget" eSuperTypes="#//ControlNodeWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="FinalNodeWidget" abstract="true" eSuperTypes="#//ControlNodeWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="FlowFinalNodeWidget" eSuperTypes="#//FinalNodeWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ActivityFinalNodeWidget" eSuperTypes="#//FinalNodeWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="DecisionNodeWidget" eSuperTypes="#//ControlNodeWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ForkNodeWidget" eSuperTypes="#//ControlNodeWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="JoinNodeWidget" eSuperTypes="#//ControlNodeWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="MergeNodeWidget" eSuperTypes="#//ControlNodeWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ActivityWidget" eSuperTypes="#//NamedElementWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ActionWidget" abstract="true" eSuperTypes="#//ExecutableNodeWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="OpaqueActionWidget" eSuperTypes="#//ActionWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ActivityEdgeSegment" abstract="true"
+      eSuperTypes="graphic.ecore#//SegmentWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ControlFlowSegment" eSuperTypes="#//ActivityEdgeSegment"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ExecutableNodeWidget" abstract="true"
+      eSuperTypes="#//ActivityNodeWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="WaypointWidget" eSuperTypes="graphic.ecore#//WaypointWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="AnchorWidget" eSuperTypes="graphic.ecore#//AnchorWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="GuardWidget" eSuperTypes="graphic.ecore#//LabelWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="InnerElementSegment" eSuperTypes="graphic.ecore#//SegmentWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="TemplateBindingSegment" eSuperTypes="graphic.ecore#//SegmentWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="TemplateBindingLabelWidget" eSuperTypes="graphic.ecore#//LabelWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="UsageSegment" eSuperTypes="graphic.ecore#//SegmentWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ImportSegment" eSuperTypes="graphic.ecore#//SegmentWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ElementImportLabelWidget" eSuperTypes="graphic.ecore#//StaticLabelWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PackageImportLabelWidget" eSuperTypes="graphic.ecore#//StaticLabelWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ObjectDiagram" eSuperTypes="graphic.ecore#//GWTDiagram"/>
+  <eClassifiers xsi:type="ecore:EClass" name="InstanceWidget" eSuperTypes="#//NamedElementWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="VertexWidget" abstract="true" eSuperTypes="#//NamedElementWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="EventWidget" eSuperTypes="#//NamedElementWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="StateWidget" eSuperTypes="#//VertexWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PseudostateWidget" eSuperTypes="#//VertexWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ConnectionPointReferenceWidget" eSuperTypes="#//VertexWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="TimeEventWidget" eSuperTypes="#//EventWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="FinalStateWidget" eSuperTypes="#//StateWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="TransitionSegment" eSuperTypes="graphic.ecore#//SegmentWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="BehaviorStateMachineDiagram" eSuperTypes="graphic.ecore#//GWTDiagram"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RegionWidget" eSuperTypes="#//NamedElementWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="StateMachineWidget" eSuperTypes="#//NamedElementWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="LinkSegment" eSuperTypes="graphic.ecore#//SegmentWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SequenceDiagram" eSuperTypes="graphic.ecore#//GWTDiagram"/>
+  <eClassifiers xsi:type="ecore:EClass" name="LifelineWidget" eSuperTypes="#//NamedElementWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ExecutionSpecificationWidget" eSuperTypes="#//NamedElementWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="MessageSegment" eSuperTypes="graphic.ecore#//SegmentWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SlotWidget" eSuperTypes="graphic.ecore#//NodeWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="NamedLabelWidget" eSuperTypes="graphic.ecore#//LabelWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="OptionalNamedLabelWidget" eSuperTypes="#//NamedLabelWidget"/>
+</ecore:EPackage>

@@ -2,17 +2,37 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
+         point="org.eclipse.emf.ecore.protocol_parser">
+      <parser
+            class="org.genmymodel.plugin.resource.GenMyModelResourceFactory"
+            protocolName="genmymodel">
+      </parser>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated ecorestub -->
+      <package
+            uri="http://ecore.abstract.stub"
+            class="ecorestub.EcorestubPackage"
+            genModel="models/ecorestub.genmodel"/>
+   </extension>
+   <extension
          point="org.eclipse.emf.ecore.dynamic_package">
       <resource
-            uri="org.genmymodel.plugin.resource.resource1">
+            location="platform:/plugin/org.genmymodel.plugin.resource/models/graphic.ecore"
+            uri="http://com.genmymodel.ecoreonline.graphic/2.0">
+      </resource>
+      <resource
+            location="platform:/plugin/org.genmymodel.plugin.resource/models/umldiag.ecore"
+            uri="http://com.genmymodel.ecoreonline.graphic.uml/1.0">
       </resource>
    </extension>
    <extension
-         point="org.eclipse.emf.ecore.protocol_parser">
-      <parser
-            class="org.genmymodel.plugin.resource.Factory1"
-            protocolName="org.genmymodel.plugin.resource.parser1">
-      </parser>
+         point="org.eclipse.emf.ecore.uri_mapping">
+      <mapping
+            source="pathmap://GENMYMODEL_LIBRARIES/GenMyModelPrimitiveTypes.library.uml"
+            target="https://api.genmymodel.com/projects/GenMyModelPrimitiveTypes.library.uml/xmi">
+      </mapping>
    </extension>
 
 </plugin>

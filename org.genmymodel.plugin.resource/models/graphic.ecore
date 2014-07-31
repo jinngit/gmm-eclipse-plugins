@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecorestub="http://ecore.abstract.stub" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="graphic" nsURI="http://com.genmymodel.ecoreonline.graphic/2.0"
+    nsPrefix="com.genmymodel.ecoreonline.graphic">
+  <eClassifiers xsi:type="ecore:EClass" name="DiagramElement" abstract="true" eSuperTypes="#//GObject #//Adapter">
+    <eOperations name="canOwn" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+      <eParameters name="feature" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EReference"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="modelElement" lowerBound="1"
+        eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ownedDiagramElements" upperBound="-1"
+        eType="#//DiagramElement" containment="true" eOpposite="#//DiagramElement/diagramElementParent"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="diagramElementParent" eType="#//DiagramElement"
+        eOpposite="#//DiagramElement/ownedDiagramElements"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Segment" abstract="true" eSuperTypes="#//PlaneElement">
+    <eOperations name="isFirst" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eOperations name="isLast" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sourceConnector" lowerBound="1"
+        eType="#//Connector" eOpposite="#//Connector/targetSegments"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="targetConnector" lowerBound="1"
+        eType="#//Connector" eOpposite="#//Connector/sourceSegments"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Node" abstract="true" eSuperTypes="#//PlaneElement #//BoundedElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="refElement" eType="#//PlaneElement"
+        eOpposite="#//PlaneElement/relativeNodes"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="constraintPosition" eType="#//ConstraintPosition"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="deltaY" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="deltaX" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="refElementX" eType="#//PlaneElement"
+        eOpposite="#//PlaneElement/relativeNodesX"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="refElementY" eType="#//PlaneElement"
+        eOpposite="#//PlaneElement/relativeNodesY"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="constraintPositionX" eType="#//ConstraintPosition"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="constraintPositionY" eType="#//ConstraintPosition"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anchor" abstract="true" eSuperTypes="#//Connector">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attachedElement" lowerBound="1"
+        eType="#//PlaneElement" eOpposite="#//PlaneElement/anchors"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Adapter" instanceClassName="org.eclipse.emf.common.notify.Adapter"
+      abstract="true" interface="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Plane" eSuperTypes="#//DiagramElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="planeElements" upperBound="-1"
+        eType="#//PlaneElement" volatile="true" transient="true" derived="true" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PlaneElement" abstract="true" eSuperTypes="#//DiagramElement">
+    <eOperations name="getRefPoint" eType="#//LocalizableElement"/>
+    <eOperations name="redraw"/>
+    <eOperations name="setAutoRedraw">
+      <eParameters name="auto" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="anchors" upperBound="-1"
+        eType="#//Anchor" eOpposite="#//Anchor/attachedElement"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="relativeNodes" upperBound="-1"
+        eType="#//Node" eOpposite="#//Node/refElement"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="relativeNodesX" upperBound="-1"
+        eType="#//Node" eOpposite="#//Node/refElementX"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="relativeNodesY" upperBound="-1"
+        eType="#//Node" eOpposite="#//Node/refElementY"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GObject" eSuperTypes="http://ecore.abstract.stub#//EModelElementStub"/>
+  <eClassifiers xsi:type="ecore:EClass" name="LocalizableElement" abstract="true"
+      interface="true">
+    <eOperations name="getPosition" lowerBound="1" eType="#//Point"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="x" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="y" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DimensionableElement" abstract="true"
+      interface="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="width" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="height" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BoundedElement" abstract="true" interface="true"
+      eSuperTypes="#//LocalizableElement #//DimensionableElement">
+    <eOperations name="getCenter" eType="#//LocalizableElement"/>
+    <eOperations name="getCenterX" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eOperations name="getCenterY" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Connector" abstract="true" eSuperTypes="#//Node">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="opposites" lowerBound="1"
+        upperBound="-1" eType="#//Connector" changeable="false" volatile="true" transient="true"
+        derived="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="targetSegments" upperBound="-1"
+        eType="#//Segment" eOpposite="#//Segment/sourceConnector"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sourceSegments" upperBound="-1"
+        eType="#//Segment" eOpposite="#//Segment/targetConnector"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="segments" lowerBound="1"
+        upperBound="-1" eType="#//Segment" volatile="true" transient="true" derived="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Waypoint" abstract="true" eSuperTypes="#//Connector"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Point" eSuperTypes="#//LocalizableElement"/>
+  <eClassifiers xsi:type="ecore:EEnum" name="ConstraintPosition">
+    <eLiterals name="ORIGIN_POSITION" literal="ORIGIN_POSITION"/>
+    <eLiterals name="END_POSITION" value="1" literal="END_POSITION"/>
+    <eLiterals name="CENTER_POSITION" value="2"/>
+    <eLiterals name="CONTAINED_POSITION" value="3"/>
+    <eLiterals name="TOP" value="4"/>
+    <eLiterals name="BOTTOM" value="5"/>
+    <eLiterals name="Y_AXIS" value="6"/>
+    <eLiterals name="X_AXIS" value="7"/>
+    <eLiterals name="AUTO_AXIS" value="8"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Diagram" abstract="true" eSuperTypes="#//GObject">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="plane" lowerBound="1" eType="#//Plane"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GWTDiagram" abstract="true" eSuperTypes="#//Diagram"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="InternalFocusPanel" instanceClassName="com.genmymodel.ecoreonline.graphic.InternalFocusPanel"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="Widget" instanceClassName="com.google.gwt.user.client.ui.Widget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="IsWidget" instanceClassName="com.google.gwt.user.client.ui.IsWidget"
+      abstract="true" interface="true">
+    <eOperations name="asWidget" eType="#//Widget"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RequiresResize" instanceClassName="com.google.gwt.user.client.ui.RequiresResize"
+      abstract="true" interface="true">
+    <eOperations name="onResize"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NodeWidget" abstract="true" eSuperTypes="#//Node #//DiagramWidget">
+    <eOperations name="add">
+      <eParameters name="widget" eType="#//DiagramWidget"/>
+    </eOperations>
+    <eOperations name="remove">
+      <eParameters name="widget" eType="#//DiagramWidget"/>
+    </eOperations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DiagramWidget" abstract="true" interface="true"
+      eSuperTypes="#//RequiresResize #//IsWidget #//PlaneElement #//BoundedElement">
+    <eOperations name="isAttached" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eOperations name="setSize">
+      <eParameters name="newWidth" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+      <eParameters name="newHeight" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </eOperations>
+    <eOperations name="getModelElement" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    <eOperations name="isMovable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eOperations name="isSelected" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eOperations name="redraw"/>
+    <eOperations name="setAutoRedraw">
+      <eParameters name="auto" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    </eOperations>
+    <eOperations name="getZIndex" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="internalPanel" eType="#//InternalFocusPanel"
+        transient="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ConnectorWidget" abstract="true" eSuperTypes="#//Connector #//DiagramWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="WaypointWidget" eSuperTypes="#//ConnectorWidget #//Waypoint">
+    <eOperations name="isAligned" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AnchorWidget" eSuperTypes="#//ConnectorWidget #//Anchor"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SegmentWidget" abstract="true" eSuperTypes="#//Segment #//DiagramWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="LabelWidget" abstract="true" eSuperTypes="#//NodeWidget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="StaticLabelWidget" eSuperTypes="#//LabelWidget">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+</ecore:EPackage>
