@@ -19,14 +19,19 @@ public class GenMyModelURIConverterImpl extends ExtensibleURIConverterImpl {
 
 	private static Logger logger = Logger.getLogger(GenMyModelURIConverterImpl.class.getName());
 	public static final String GENMYMODEL_RESOURCE_URI_PREFIX = "genmymodel://";
-	public static final String GENMYMODEL_LIB = "pathmap://GENMYMODEL_LIBRARIES/";
-	public static final String UML_LIB = "pathmap://UML_LIBRARIES/";
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public InputStream createInputStream(URI uri) throws IOException {
 		return createInputStream(uri, null);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public InputStream createInputStream(URI uri, Map<?, ?> options) throws IOException {
 		InputStream is = null;
 
@@ -54,7 +59,7 @@ public class GenMyModelURIConverterImpl extends ExtensibleURIConverterImpl {
 
 	private String extractProjectID(URI uri) {
 		if (uri != null) {
-			return uri.toString().replace(UML_LIB, "").replace(GENMYMODEL_LIB, "").replace(GENMYMODEL_RESOURCE_URI_PREFIX, "");
+			return uri.toString().replace(GENMYMODEL_RESOURCE_URI_PREFIX, "");
 		}
 
 		return null;
