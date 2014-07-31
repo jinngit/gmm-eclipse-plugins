@@ -12,7 +12,8 @@ Require-Bundle: org.eclipse.ui,
  org.genmymodel.plugin.common,
  org.eclipse.emf.ecore;bundle-version="2.10.0";visibility:=reexport,
  org.eclipse.emf.ecore.xmi;bundle-version="2.10.0",
- org.eclipse.emf;bundle-version="2.6.0"
+ org.eclipse.emf,
+ org.eclipse.emf.ecore.change
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: ecorestub,
