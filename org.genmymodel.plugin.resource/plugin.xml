@@ -1,18 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension
+   <!--<extension
          point="org.eclipse.emf.ecore.dynamic_package">
       <resource
             uri="org.genmymodel.plugin.resource.resource1">
       </resource>
-   </extension>
+   </extension>-->
    <extension
          point="org.eclipse.emf.ecore.protocol_parser">
       <parser
-            class="org.genmymodel.plugin.resource.Factory1"
-            protocolName="org.genmymodel.plugin.resource.parser1">
+            class="org.genmymodel.plugin.resource.GMMResourceFactory"
+            protocolName="genmymodel" >
       </parser>
    </extension>
-
+   
+  <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="GenMyModel"
+            id="explorer">
+      </category>
+      <view
+            name="Explorer"
+            icon="icons/gmm.ico"
+            category="explorer"
+            class="org.genmymodel.plugin.resource.GMMExplorer"
+            id="org.genmymodel.plugin.resource.GMMExplorer">
+      </view>
+   </extension>
+   
 </plugin>
