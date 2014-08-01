@@ -23,9 +23,7 @@ public class GenMyModelResource extends BinaryResourceImpl {
 	
 	@Override
 	public void save(Map<?, ?> options) throws IOException {
-		System.out.println("Saving bitch");
-		super.save(options);
-		
+		super.save(options);		
 	}
 	
 	@Override
