@@ -8,24 +8,17 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.change.ChangeDescription;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.ecore.resource.URIConverter;
-import org.eclipse.emf.ecore.resource.impl.BinaryResourceImpl;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 
-/**
- * 
- * @author Vincent Aranega
- *
- */
-public class GenMyModelResource extends BinaryResourceImpl {
-	private ChangeRecorder recorder;
+public class GenMyModelXMIResource extends XMIResourceImpl {
+private ChangeRecorder recorder;
 	
-	public GenMyModelResource() {
+	public GenMyModelXMIResource() {
 		super();
-		//this.recorder = new GenMyModelChangeRecorder(this);
 	}
 	
-	public GenMyModelResource(URI uri) {
+	public GenMyModelXMIResource(URI uri) {
 		super(uri);
-		//this.recorder = new GenMyModelChangeRecorder(this);
 	}
 	
 	@Override
@@ -40,9 +33,6 @@ public class GenMyModelResource extends BinaryResourceImpl {
 	public void load(Map<?, ?> options) throws IOException {
 		super.load(options);
 		this.recorder = new GenMyModelChangeRecorder(getResourceSet());
-		for (AdapterFactory adap : getResourceSet().getAdapterFactories()) {
-			System.out.println(" ADAPTER" + adap);
-		}
 	}
 	
 	@Override
