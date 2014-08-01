@@ -48,5 +48,13 @@
             id="org.genmymodel.plugin.resource.GMMExplorer">
       </view>
    </extension>
+  <extension
+        point="org.eclipse.ui.editors">
+     <editor
+           default="false"
+           id="org.genmymodel.plugin.resource.editor1"
+           name="name">
+     </editor>
+  </extension>
 
 </plugin>
