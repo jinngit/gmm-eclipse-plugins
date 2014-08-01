@@ -1,7 +1,9 @@
 package org.genmymodel.common.api;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
@@ -30,12 +32,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  *
  */
 public class GMMAPIRestClient {
-	public static final String API_URL = "https://enginepreprodks.genmymodel.com";
 	public static final String REAL_API = "https://apipreprodks.genmymodel.com"; 
 	public static final String OAUTH_TOK = REAL_API  + "/oauth/token";
 	public static final String USER_PROJECTS = REAL_API + "/users/{username}/projects";
-	public static final String COMPILE_RESTURL = API_URL + "/mtl/compile";
-	public static final String EXEC_RESTURL_FRAG = API_URL + "/mtl/exec/";
+	public static final String COMPILE_RESTURL = REAL_API + "/customgenerators/dev/compile";
+	public static final String EXEC_RESTURL_FRAG = REAL_API + "/customgenerators/dev/execute/";
 	private static final String CLIENT_ID = "test";
 	private static final String CLIENT_SECRET = "test";
 
@@ -134,6 +135,19 @@ public class GMMAPIRestClient {
 		RestTemplate template = createOAuthTemplate(credential);
 		ResponseEntity<T> response = template.getForEntity(url, clazz, params);
 		return response.getBody();
+	}
+	
+	/**
+	 * Performs a GET call on a given address and return the body as an InputStream.
+	 * @param url The URL to call.
+	 * @param credential The user credential, if null, a non oauth rest template is used.
+	 * @param params Additional parameter that could be part of the URL.
+	 * @return An InputStream.
+	 */
+	public InputStream GETasInputstream(String url, GMMCredential credential, Object... params) {
+		RestTemplate template = credential != null ? createOAuthTemplate(credential): new RestTemplate();
+		ResponseEntity<byte[]> res = template.getForEntity(url, byte[].class, params);
+		return new ByteArrayInputStream(res.getBody());
 	}
 
 	/**
