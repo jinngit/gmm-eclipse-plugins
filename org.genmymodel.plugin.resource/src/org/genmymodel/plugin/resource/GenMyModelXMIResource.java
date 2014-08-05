@@ -16,19 +16,19 @@ public class GenMyModelXMIResource extends XMIResourceImpl {
 
 	public GenMyModelXMIResource() {
 		super();
-		setTrackingModification(true);
+		//setTrackingModification(true);
 	}
 
 	public GenMyModelXMIResource(URI uri) {
 		super(uri);
-		setTrackingModification(true);
+		//setTrackingModification(true);
 	}
 
 	@Override
 	public void save(Map<?, ?> options) throws IOException {
 		// super.save(options); //TODO TMP DISABLE
 		if (tracker != null && !tracker.isStreamMode()) {
-			tracker.sendCommands();
+			tracker.sendCommands(false);
 		}
 	}
 
@@ -45,7 +45,6 @@ public class GenMyModelXMIResource extends XMIResourceImpl {
 		return new GenMyModelURIConverterImpl();
 	}
 
-	
 	@Override
 	protected void attachedHelper(EObject eObject) {
 		if (innerLoaded) {

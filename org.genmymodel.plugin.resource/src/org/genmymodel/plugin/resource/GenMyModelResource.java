@@ -1,6 +1,7 @@
 package org.genmymodel.plugin.resource;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.emf.common.notify.Adapter;
@@ -22,19 +23,19 @@ public class GenMyModelResource extends BinaryResourceImpl {
 
 	public GenMyModelResource() {
 		super();
-		setTrackingModification(true);
+		//setTrackingModification(true);
 	}
 
 	public GenMyModelResource(URI uri) {
 		super(uri);
-		setTrackingModification(true);
+		//setTrackingModification(true);
 	}
 
 	@Override
 	public void save(Map<?, ?> options) throws IOException {
 		// super.save(options); //TODO TMP DISABLE
 		if (tracker != null && !tracker.isStreamMode()) {
-			tracker.sendCommands();
+			tracker.sendCommands(false);
 		}
 	}
 
