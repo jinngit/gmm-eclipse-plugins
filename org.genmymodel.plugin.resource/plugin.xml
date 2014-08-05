@@ -41,20 +41,12 @@
             id="explorer">
       </category>
       <view
-            name="Explorer"
+            name="GenMyModel Projects Explorer"
             icon="icons/gmm.ico"
             category="explorer"
             class="org.genmymodel.plugin.resource.GenMyModelExplorer"
             id="org.genmymodel.plugin.resource.GMMExplorer">
       </view>
    </extension>
-  <extension
-        point="org.eclipse.ui.editors">
-     <editor
-           default="false"
-           id="org.genmymodel.plugin.resource.editor1"
-           name="name">
-     </editor>
-  </extension>
 
 </plugin>
