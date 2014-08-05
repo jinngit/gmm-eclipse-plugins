@@ -24,7 +24,6 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -37,18 +36,27 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IMemento;
 import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.XMLMemento;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.statushandlers.StatusManager;
+import org.genmymodel.common.account.GMMCredential;
+import org.genmymodel.common.account.GMMKeyStore;
 import org.genmymodel.common.api.GMMAPIRestClient;
-import org.genmymodel.common.api.GMMCredential;
 import org.genmymodel.common.api.ProjectBinding;
 import org.springframework.security.oauth2.client.resource.OAuth2AccessDeniedException;
 
-public class GMMExplorer extends ViewPart {
+/**
+ * This class manage the explorer views.
+ * 
+ * @author Ali Gourch
+ */
+public class GenMyModelExplorer extends ViewPart {
 	/**
 	 * The ID of the view as specified by the extension.
 	 */
@@ -58,11 +66,35 @@ public class GMMExplorer extends ViewPart {
 	private DrillDownAdapter drillDownAdapter;
 	private Action addAccount, deleteAccount, doubleClick;
 	private ViewContentProvider content;
+	private IMemento save;
+	private GMMKeyStore keyStore;
+
+	/**
+	 * The constructor.
+	 */
+	public GenMyModelExplorer() {
+		content = new ViewContentProvider();
+		keyStore = GMMKeyStore.getInstance();
+	}
+
+	public void init(IViewSite site, IMemento memento) throws PartInitException {
+		super.init(site, memento);
+		this.save = memento;
+		for (IMemento child : memento.getChildren("credential")) {
+			keyStore.addCredential(
+					child.getString("username"),
+					new GMMCredential(
+							child.getString("username"),
+							child.getString("password")));
+			keyStore.loadCredential(child.getString("username"));
+		}
+	}
 
 	class TreeObject implements IAdaptable {
 		private String name;
 		private TreeParent parent;
 		private ProjectBinding project;
+		private GMMCredential credential;
 
 		public TreeObject(String name) {
 			this.name = name;
@@ -87,17 +119,24 @@ public class GMMExplorer extends ViewPart {
 		public ProjectBinding getProject() {
 			return project;
 		}
-		
+
 		public void setProject(ProjectBinding project) {
 			this.project = project;
 		}
 
-		@Override
-		@SuppressWarnings("rawtypes")
-		public Object getAdapter( Class adapter) {
-			return null;
+		public GMMCredential getCredential() {
+			return credential;
 		}
 
+		public void setCredential(GMMCredential credential) {
+			this.credential = credential;
+		}
+
+		@Override
+		@SuppressWarnings("rawtypes")
+		public Object getAdapter(Class adapter) {
+			return null;
+		}
 	}
 
 	class TreeParent extends TreeObject {
@@ -119,7 +158,8 @@ public class GMMExplorer extends ViewPart {
 		}
 
 		public TreeObject[] getChildren() {
-			return (TreeObject[]) children.toArray(new TreeObject[children.size()]);
+			return (TreeObject[]) children.toArray(new TreeObject[children
+					.size()]);
 		}
 
 		public boolean hasChildren() {
@@ -129,7 +169,7 @@ public class GMMExplorer extends ViewPart {
 
 	class ViewContentProvider implements IStructuredContentProvider,
 			ITreeContentProvider {
-		private TreeParent invisibleRoot;		
+		private TreeParent invisibleRoot;
 		List<List<Object>> users = new ArrayList<List<Object>>();
 
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
@@ -171,10 +211,13 @@ public class GMMExplorer extends ViewPart {
 			TreeParent root = new TreeParent("Users");
 
 			for (int i = 0; i < users.size(); i++) {
-				TreeParent parent = new TreeParent(((GMMCredential)users.get(i).get(0)).getUsername());
+				TreeParent parent = new TreeParent(((GMMCredential) users
+						.get(i).get(0)).getUsername());
 				for (int j = 1; j < users.get(i).size(); j++) {
-					TreeObject child = new TreeObject(((ProjectBinding)users.get(i).get(j)).getName());
-					child.setProject((ProjectBinding)users.get(i).get(j));
+					TreeObject child = new TreeObject(((ProjectBinding) users
+							.get(i).get(j)).getName());
+					child.setCredential((GMMCredential) users.get(i).get(0));
+					child.setProject((ProjectBinding) users.get(i).get(j));
 					parent.addChild(child);
 				}
 				root.addChild(parent);
@@ -190,7 +233,8 @@ public class GMMExplorer extends ViewPart {
 
 		public boolean removeElement(String element) {
 			for (int i = 0; i < users.size(); i++) {
-				if (((GMMCredential)users.get(i).get(0)).getUsername().equals(element)) {
+				if (((GMMCredential) users.get(i).get(0)).getUsername().equals(
+						element)) {
 					return users.remove(users.get(i));
 				}
 			}
@@ -198,8 +242,8 @@ public class GMMExplorer extends ViewPart {
 		}
 	}
 
-	class ViewLabelProvider extends LabelProvider implements IColorProvider, IFontProvider {
-
+	class ViewLabelProvider extends LabelProvider implements IColorProvider,
+			IFontProvider {
 		public String getText(Object obj) {
 			return obj.toString();
 		}
@@ -207,9 +251,11 @@ public class GMMExplorer extends ViewPart {
 		@SuppressWarnings("deprecation")
 		public Image getImage(Object obj) {
 			String imageKey = ISharedImages.IMG_OBJ_PROJECT;
-			if (obj instanceof TreeParent)
+			if (obj instanceof TreeParent) {
 				imageKey = ISharedImages.IMG_OBJ_FOLDER;
-			return PlatformUI.getWorkbench().getSharedImages().getImage(imageKey);
+			}
+			return PlatformUI.getWorkbench().getSharedImages()
+					.getImage(imageKey);
 		}
 
 		public Font getFont(Object element) {
@@ -220,22 +266,21 @@ public class GMMExplorer extends ViewPart {
 
 		public Color getForeground(Object element) {
 			if (element instanceof TreeParent)
-				return getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_BLACK);
+				return getSite().getShell().getDisplay()
+						.getSystemColor(SWT.COLOR_BLACK);
 			return null;
 		}
 
 		public Color getBackground(Object element) {
-			if (element instanceof TreeParent)
-				return getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_GRAY);
+			if (element instanceof TreeParent) {
+				return getSite().getShell().getDisplay()
+						.getSystemColor(SWT.COLOR_GRAY);
+			}
 			return null;
 		}
 	}
 
-	class NameSorter extends ViewerSorter {
-	}
-
 	class AddDialogAccount extends TitleAreaDialog {
-
 		private Text UsernameText;
 		private Text passwordText;
 
@@ -250,7 +295,8 @@ public class GMMExplorer extends ViewPart {
 		public void create() {
 			super.create();
 			setTitle("Add account");
-			setMessage("Please insert your Username and password.", IMessageProvider.INFORMATION);
+			setMessage("Please insert your Username and password.",
+					IMessageProvider.INFORMATION);
 		}
 
 		@Override
@@ -259,7 +305,8 @@ public class GMMExplorer extends ViewPart {
 			Composite container = new Composite(area, SWT.NONE);
 			container.setLayoutData(new GridData(GridData.FILL_BOTH));
 			GridLayout layout = new GridLayout(2, false);
-			container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+			container
+					.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 			container.setLayout(layout);
 
 			createUsername(container);
@@ -317,22 +364,24 @@ public class GMMExplorer extends ViewPart {
 	}
 
 	/**
-	 * The constructor.
-	 */
-	public GMMExplorer() {
-		content = new ViewContentProvider();
-	}
-
-	/**
-	 * This is a callback that will allow us to create the viewer and initialize it.
+	 * This is a callback that will allow us to create the viewer and initialize
+	 * it.
 	 */
 	public void createPartControl(Composite parent) {
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		drillDownAdapter = new DrillDownAdapter(viewer);
 		viewer.setContentProvider(content);
 		viewer.setLabelProvider(new ViewLabelProvider());
-		viewer.setSorter(new NameSorter());
 		viewer.setInput(getViewSite());
+
+		if (save != null) {
+			IMemento[] credentials = save.getChildren("credential");
+			save = XMLMemento.createWriteRoot("view");
+			for (IMemento credential : credentials) {
+				addAccount(new GMMCredential(credential.getString("username"),
+						credential.getString("password")));
+			}
+		}
 
 		makeActions();
 		contributeToActionBars();
@@ -361,9 +410,11 @@ public class GMMExplorer extends ViewPart {
 	private void makeActions() {
 		addAccount = new Action() {
 			public void run() {
-				AddDialogAccount dialogAccount = new AddDialogAccount(viewer.getControl().getShell());
+				AddDialogAccount dialogAccount = new AddDialogAccount(viewer
+						.getControl().getShell());
 				dialogAccount.open();
-				addAccount(dialogAccount);
+				addAccount(new GMMCredential(dialogAccount.getUsername(),
+						dialogAccount.getPassword()));
 			}
 		};
 		addAccount.setText("Add");
@@ -385,39 +436,54 @@ public class GMMExplorer extends ViewPart {
 				.getImageDescriptor(ISharedImages.IMG_ETOOL_DELETE));
 
 		doubleClick = new Action() {
-			public void run() {				
-				URIEditorInput input = new URIEditorInput(
-						URI.createURI("genmymodel://"
-								+ (((TreeObject)((IStructuredSelection) viewer.getSelection())
-										.getFirstElement())).getProject().getProjectId()));
-				try {
-					PlatformUI
-							.getWorkbench()
-							.getActiveWorkbenchWindow()
-							.getActivePage()
-							.openEditor(
-									input,
-									"org.eclipse.emf.ecore.presentation.EcoreEditorID",
-									true);
-				} catch (PartInitException e) {
-					e.printStackTrace();
+			public void run() {
+				if (((TreeObject) ((IStructuredSelection) viewer.getSelection())
+						.getFirstElement()).getProject() != null) {
+					URIEditorInput input = new URIEditorInput(
+							URI.createURI("genmymodel://"
+									+ (((TreeObject) ((IStructuredSelection) viewer
+											.getSelection()).getFirstElement()))
+											.getProject().getProjectId()));
+					keyStore.loadCredential((((TreeObject) ((IStructuredSelection) viewer
+							.getSelection()).getFirstElement()))
+							.getCredential().getUsername());
+					try {
+						PlatformUI
+								.getWorkbench()
+								.getActiveWorkbenchWindow()
+								.getActivePage()
+								.openEditor(
+										input,
+										"org.eclipse.emf.ecore.presentation.EcoreEditorID",
+										true);
+					} catch (PartInitException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		};
 	}
 
-	private void addAccount(final AddDialogAccount dialogAccount) {
-		GMMCredential credential = new GMMCredential(dialogAccount.getUsername(), dialogAccount.getPassword());
+	private void addAccount(GMMCredential credential) {
 		try {
-			ProjectBinding[] projects = GMMAPIRestClient.getInstance().GETMyProjects(credential);
+			ProjectBinding[] projects = GMMAPIRestClient.getInstance()
+					.GETMyProjects(credential);
 			ArrayList<Object> list = new ArrayList<Object>();
 			list.add(credential);
 			for (ProjectBinding project : projects) {
 				list.add(project);
 			}
+
+			if (save != null) {
+				IMemento child = save.createChild("credential");
+				child.putString("username", credential.getUsername());
+				child.putString("password", credential.getPassword());
+			}
+
 			content.addElement(list);
 			content.initialize();
 			viewer.setContentProvider(content);
+			keyStore.addCredential(credential.getUsername(), credential);
 		} catch (OAuth2AccessDeniedException e) {
 			IStatus err = new Status(
 					Status.ERROR,
@@ -431,8 +497,23 @@ public class GMMExplorer extends ViewPart {
 
 	private void removeAccount(String account) {
 		if (content.removeElement(account)) {
+			if (save != null) {
+				IMemento[] credentials = save.getChildren("credential");
+				save = XMLMemento.createWriteRoot("view");
+				for (IMemento credential : credentials) {
+					if (!credential.getString("username").equalsIgnoreCase(
+							account)) {
+						IMemento child = save.createChild("credential");
+						child.putString("username",
+								credential.getString("username"));
+						child.putString("password",
+								credential.getString("password"));
+					}
+				}
+			}
 			content.initialize();
 			viewer.setContentProvider(content);
+			keyStore.removeCredential(account);
 		}
 	}
 
@@ -442,6 +523,11 @@ public class GMMExplorer extends ViewPart {
 				doubleClick.run();
 			}
 		});
+	}
+
+	public void saveState(IMemento memento) {
+		super.saveState(memento);
+		memento.putMemento(save);
 	}
 
 	/**

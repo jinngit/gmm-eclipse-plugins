@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
+import org.genmymodel.common.account.GMMCredential;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;

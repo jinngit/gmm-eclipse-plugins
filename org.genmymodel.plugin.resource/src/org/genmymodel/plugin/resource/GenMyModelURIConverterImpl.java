@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.impl.ExtensibleURIConverterImpl;
+import org.genmymodel.common.account.GMMKeyStore;
 import org.genmymodel.common.api.GMMAPIRestClient;
 
 /**
@@ -49,7 +50,8 @@ public class GenMyModelURIConverterImpl extends ExtensibleURIConverterImpl {
 		try {
 
 			GMMAPIRestClient client = GMMAPIRestClient.getInstance();
-			return client.GETasInputstream(GMMAPIRestClient.REAL_API + "/projects/" + extractProjectID(uri) + "/data", null); // TODO manage credentials
+			GMMKeyStore keyStore = GMMKeyStore.getInstance();
+			return client.GETasInputstream(GMMAPIRestClient.REAL_API + "/projects/" + extractProjectID(uri) + "/data", keyStore.getCurrentCredential());
 		} catch (Exception e) { 
 			e.printStackTrace();
 		}
