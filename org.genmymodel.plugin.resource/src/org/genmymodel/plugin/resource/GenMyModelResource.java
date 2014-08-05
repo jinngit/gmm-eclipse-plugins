@@ -23,7 +23,8 @@ public class GenMyModelResource extends BinaryResourceImpl {
 	
 	@Override
 	public void save(Map<?, ?> options) throws IOException {
-		super.save(options);		
+		throw new UnsupportedOperationException("Models cannot be change by eclipse editor ATM. Wait for next versions. ");
+		// super.save(options); // TODO Add write support
 	}
 	
 	@Override

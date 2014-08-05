@@ -79,8 +79,9 @@ public class GenMyModelExplorer extends ViewPart {
 
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
-		this.save = memento;
-		for (IMemento child : memento.getChildren("credential")) {
+		this.save = memento == null ? XMLMemento.createWriteRoot("view") : memento;
+
+		for (IMemento child : save.getChildren("credential")) {
 			keyStore.addCredential(
 					child.getString("username"),
 					new GMMCredential(
