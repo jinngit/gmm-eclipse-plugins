@@ -33,6 +33,14 @@ public class GMMKeyStore {
 	}
 	
 	/**
+	 * gets the GMMKeyStore credentials.
+	 * @return The map of credentials.
+	 */
+	synchronized public Map<String, GMMCredential> getCredentials() {
+		return GMMKeyStore.CREDENTIALS;
+	}
+	
+	/**
 	 * Adds the GMMKeyStore credential.
 	 */
 	synchronized public void addCredential(String username, GMMCredential credential) {
