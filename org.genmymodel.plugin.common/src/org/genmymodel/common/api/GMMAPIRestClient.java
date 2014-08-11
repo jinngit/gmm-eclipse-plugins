@@ -33,9 +33,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  *
  */
 public class GMMAPIRestClient {
-	public static final String REAL_API = "https://apipreprodks.genmymodel.com"; 
+	public static final String REAL_API = "https://apipreprodks.genmymodel.com";
 	public static final String OAUTH_TOK = REAL_API  + "/oauth/token";
 	public static final String USER_PROJECTS = REAL_API + "/users/{username}/projects";
+	public static final String USER_SHARED_PROJECTS = REAL_API + "/projects/shared";
+	public static final String USER_CUSTOMGENERATORS = REAL_API + "/customgenerators";
 	public static final String COMPILE_RESTURL = REAL_API + "/customgenerators/dev/compile";
 	public static final String EXEC_RESTURL_FRAG = REAL_API + "/customgenerators/dev/execute/";
 	private static final String CLIENT_ID = "test";
@@ -122,6 +124,24 @@ public class GMMAPIRestClient {
 	 */
 	public ProjectBinding[] GETMyProjects(GMMCredential credential) {
 		return GET(USER_PROJECTS, ProjectBinding[].class, credential, credential.getUsername());
+	}
+
+	/**
+	 * Returns shared user projects.
+	 * @param credential The user credential.
+	 * @return A tab containing the shared user project information.
+	 */
+	public ProjectBinding[] GETSharedProjects(GMMCredential credential) {
+		return GET(USER_SHARED_PROJECTS, ProjectBinding[].class, credential, credential.getUsername());
+	}
+
+	/**
+	 * Returns user custom generators.
+	 * @param credential The user credential.
+	 * @return A tab containing the user project information.
+	 */
+	public CustomGeneratorBinding[] GETMyCustomGenerators(GMMCredential credential) {
+		return GET(USER_CUSTOMGENERATORS, CustomGeneratorBinding[].class, credential, credential.getUsername());
 	}
 
 	/**
