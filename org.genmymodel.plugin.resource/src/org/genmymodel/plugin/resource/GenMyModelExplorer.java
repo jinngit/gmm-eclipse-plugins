@@ -708,13 +708,14 @@ public class GenMyModelExplorer extends ViewPart {
 	private void generation(CustomGeneratorBinding generator, String destination) {
 		ProjectBinding project = ((TreeObject) ((IStructuredSelection) viewer.getSelection()).getFirstElement()).getProject();
 		GMMCredential credential = ((TreeObject) ((IStructuredSelection) viewer.getSelection()).getFirstElement()).getCredential();
-
-		System.out.println(generator.getGeneratorURL());
 		try {
 			//Copy from github 
 			File customgen = File.createTempFile("customgen", ".zip");
 			String path = customgen.getParent();
-			String url = generator.getGeneratorURL().replace(".git", "").concat("/archive/master.zip");
+			String url = generator.getGeneratorURL()
+							.replace(".git", "")
+							.concat("/archive/")
+							.concat((generator.getGeneratorBranch()!= "" ? generator.getGeneratorBranch() : "master") +".zip");
 			FileUtils.copyURLToFile(new URL(url), customgen, 10000, 10000);
 			
 			//Unzip github archive

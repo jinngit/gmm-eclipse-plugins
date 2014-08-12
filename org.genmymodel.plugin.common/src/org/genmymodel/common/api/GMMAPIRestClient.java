@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * compile/execute a custom generator project.
  * 
  * @author Vincent Aranega
+ * @author Ali Gourch
  *
  */
 public class GMMAPIRestClient {
