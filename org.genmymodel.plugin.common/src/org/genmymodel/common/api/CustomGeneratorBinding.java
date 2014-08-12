@@ -11,24 +11,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CustomGeneratorBinding {
-	private String name;
 	private String generatorId;
+	private String name;
 	private String generatorURL;
+	private String generatorBranch;
 	private String generatorUser;
+	private String generatorPass;
 	private boolean _generatedOnGithub;
 	
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
 	/**
 	 * @return the generatorId
 	 */
@@ -42,16 +32,16 @@ public class CustomGeneratorBinding {
 		this.generatorId = generatorId;
 	}
 	/**
-	 * @return the _generatedOnGithub
+	 * @return the name
 	 */
-	public boolean isGeneratedOnGithub() {
-		return _generatedOnGithub;
+	public String getName() {
+		return name;
 	}
 	/**
-	 * @param _generatedOnGithub the _generatedOnGithub to set
+	 * @param name the name to set
 	 */
-	public void setGeneratedOnGithub(boolean _generatedOnGithub) {
-		this._generatedOnGithub = _generatedOnGithub;
+	public void setName(String name) {
+		this.name = name;
 	}
 	/**
 	 * @return the generatorURL
@@ -66,6 +56,18 @@ public class CustomGeneratorBinding {
 		this.generatorURL = generatorURL;
 	}
 	/**
+	 * @return the generatorBranch
+	 */
+	public String getGeneratorBranch() {
+		return generatorBranch;
+	}
+	/**
+	 * @param generatorBranch the generatorBranch to set
+	 */
+	public void setGeneratorBranch(String generatorBranch) {
+		this.generatorBranch = generatorBranch;
+	}
+	/**
 	 * @return the generatorUser
 	 */
 	public String getGeneratorUser() {
@@ -76,5 +78,29 @@ public class CustomGeneratorBinding {
 	 */
 	public void setGeneratorUser(String generatorUser) {
 		this.generatorUser = generatorUser;
+	}
+	/**
+	 * @return the generatorPass
+	 */
+	public String getGeneratorPass() {
+		return generatorPass;
+	}
+	/**
+	 * @param generatorPass the generatorPass to set
+	 */
+	public void setGeneratorPass(String generatorPass) {
+		this.generatorPass = generatorPass;
+	}
+	/**
+	 * @return the _generatedOnGithub
+	 */
+	public boolean isGeneratedOnGithub() {
+		return _generatedOnGithub;
+	}
+	/**
+	 * @param _generatedOnGithub the _generatedOnGithub to set
+	 */
+	public void setGeneratedOnGithub(boolean _generatedOnGithub) {
+		this._generatedOnGithub = _generatedOnGithub;
 	}
 }
