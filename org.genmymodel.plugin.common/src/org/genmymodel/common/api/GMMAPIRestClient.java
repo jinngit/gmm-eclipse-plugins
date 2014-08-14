@@ -41,6 +41,7 @@ public class GMMAPIRestClient {
 	public static final String USER_CUSTOMGENERATORS = REAL_API + "/customgenerators";
 	public static final String COMPILE_RESTURL = REAL_API + "/customgenerators/dev/compile";
 	public static final String EXEC_RESTURL_FRAG = REAL_API + "/customgenerators/dev/execute/";
+	public static final String USER_IMPORTED_PROJECTS = REAL_API + "/projects/import";
 	private static final String CLIENT_ID = "test";
 	private static final String CLIENT_SECRET = "test";
 
@@ -97,6 +98,22 @@ public class GMMAPIRestClient {
 	 */
 	public CompilCallResult POSTExec(File zipArchive, String projectID, GMMCredential credential) throws IOException {
 		return POST(createOAuthTemplate(credential), EXEC_RESTURL_FRAG + projectID, zipArchive);
+	}
+
+	/**
+	 * Calls the GenMyModel API in order to import the user project.
+	 * @param credential The user credential.
+	 * @param project The user project.
+	 * @return A ResponseEntity containing the user project information.
+	 */
+	public ResponseEntity<ProjectPostBinding> POSTImportedProjects(GMMCredential credential, ProjectPostBinding project) {
+		try {
+			ResponseEntity<ProjectPostBinding> res = createOAuthTemplate(credential).postForEntity(USER_IMPORTED_PROJECTS, project, ProjectPostBinding.class);
+			return res;			
+		} catch (HttpStatusCodeException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	private CompilCallResult POST(RestTemplate template, String url, File zipArchive) throws IOException {
