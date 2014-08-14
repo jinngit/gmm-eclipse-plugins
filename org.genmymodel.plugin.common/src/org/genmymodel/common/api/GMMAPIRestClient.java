@@ -106,7 +106,7 @@ public class GMMAPIRestClient {
 	 * @param project The user project.
 	 * @return A ResponseEntity containing the user project information.
 	 */
-	public ResponseEntity<ProjectPostBinding> POSTImportedProjects(GMMCredential credential, ProjectPostBinding project) {
+	public ResponseEntity<ProjectPostBinding> POSTImportedProject(GMMCredential credential, ProjectPostBinding project) {
 		try {
 			ResponseEntity<ProjectPostBinding> res = createOAuthTemplate(credential).postForEntity(USER_IMPORTED_PROJECTS, project, ProjectPostBinding.class);
 			return res;			
