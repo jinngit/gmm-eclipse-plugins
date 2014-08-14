@@ -44,8 +44,8 @@
             name="GenMyModel Projects Explorer"
             icon="icons/gmm.ico"
             category="explorer"
-            class="org.genmymodel.plugin.resource.GenMyModelExplorer"
-            id="org.genmymodel.plugin.resource.GMMExplorer">
+            class="org.genmymodel.plugin.resource.explorer.GenMyModelExplorer"
+            id="org.genmymodel.plugin.resource.explorer.GenMyModelExplorer">
       </view>
    </extension>
 
