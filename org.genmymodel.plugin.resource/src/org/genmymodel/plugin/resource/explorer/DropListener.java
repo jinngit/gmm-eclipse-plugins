@@ -14,6 +14,7 @@ import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.widgets.Composite;
 import org.genmymodel.common.api.GMMAPIRestClient;
 import org.genmymodel.common.api.ProjectBinding;
+import org.genmymodel.common.api.ProjectPostBinding;
 import org.springframework.http.ResponseEntity;
 
 public class DropListener extends ViewerDropAdapter {
@@ -45,11 +46,11 @@ public class DropListener extends ViewerDropAdapter {
 			try {
 				InputDialog input = new InputDialog(parent.getShell(), "Project name", "Please enter the name of your project :", "Project name", new validator());
 				input.open();
-				ProjectBinding project = new ProjectBinding();
+				ProjectPostBinding project = new ProjectPostBinding();
 				project.setName(input.getValue());
 				project.setPublic(target.getName().equalsIgnoreCase("public"));
 				project.setData(FileUtils.readFileToByteArray(file));
-				ResponseEntity<ProjectBinding> response = GMMAPIRestClient.getInstance().POSTImportedProject(target.getParent().getCredential(), project);
+				ResponseEntity<ProjectPostBinding> response = GMMAPIRestClient.getInstance().POSTImportedProject(target.getParent().getCredential(), project);
 				TreeObject child = new TreeObject(project.getName());
 				child.setCredential(target.getParent().getCredential());
 				project.setProjectId(response.getBody().getProjectId());

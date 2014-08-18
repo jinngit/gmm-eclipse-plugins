@@ -110,9 +110,10 @@ public class GenMyModelExplorer extends ViewPart {
 		viewer.setInput(getViewSite());
 		
 		int operations = DND.DROP_COPY | DND.DROP_MOVE;
-	    Transfer[] transferTypes = new Transfer[]{FileTransfer.getInstance()};
+		Transfer[] transferTypes = new Transfer[]{FileTransfer.getInstance()};
+	    viewer.addDragSupport(operations, transferTypes, new DragListener(viewer));
 	    viewer.addDropSupport(operations, transferTypes, new DropListener(parent, viewer));
-
+	    
 		if (save != null) {
 			IMemento[] credentials = save.getChildren("credential");
 			save = XMLMemento.createWriteRoot("view");
