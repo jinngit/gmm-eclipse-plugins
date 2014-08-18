@@ -13,20 +13,23 @@ import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.widgets.Composite;
 import org.genmymodel.common.api.GMMAPIRestClient;
-import org.genmymodel.common.api.ProjectPostBinding;
+import org.genmymodel.common.api.ProjectBinding;
+import org.springframework.http.ResponseEntity;
 
 public class DropListener extends ViewerDropAdapter {
 	private Composite parent;
-	private TreeObject target;
+	private TreeParent target;
+	private TreeViewer viewer;
 
 	public DropListener(Composite parent, TreeViewer viewer) {
 		super(viewer);
 		this.parent = parent;
+		this.viewer = viewer;
 	}
 
 	@Override
 	public void drop(DropTargetEvent event) {
-		target = (TreeObject) determineTarget(event);
+		target = (TreeParent) determineTarget(event);
 		super.drop(event);
 	}
 
@@ -42,11 +45,17 @@ public class DropListener extends ViewerDropAdapter {
 			try {
 				InputDialog input = new InputDialog(parent.getShell(), "Project name", "Please enter the name of your project :", "Project name", new validator());
 				input.open();
-				ProjectPostBinding project = new ProjectPostBinding();
+				ProjectBinding project = new ProjectBinding();
 				project.setName(input.getValue());
 				project.setPublic(target.getName().equalsIgnoreCase("public"));
 				project.setData(FileUtils.readFileToByteArray(file));
-				GMMAPIRestClient.getInstance().POSTImportedProject(target.getParent().getCredential(), project);
+				ResponseEntity<ProjectBinding> response = GMMAPIRestClient.getInstance().POSTImportedProject(target.getParent().getCredential(), project);
+				TreeObject child = new TreeObject(project.getName());
+				child.setCredential(target.getParent().getCredential());
+				project.setProjectId(response.getBody().getProjectId());
+				child.setProject(project);
+				target.addChild(child);
+				viewer.refresh();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
