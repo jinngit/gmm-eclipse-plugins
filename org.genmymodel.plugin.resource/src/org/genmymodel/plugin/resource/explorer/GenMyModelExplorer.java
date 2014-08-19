@@ -25,6 +25,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -70,7 +71,7 @@ public class GenMyModelExplorer extends ViewPart {
 	private GMMAPIRestClient client;
 	private TreeViewer viewer;
 	private DrillDownAdapter drillDownAdapter;
-	private Action addAccount, deleteAccount, refreshAccount, doubleClick, rightClick;
+	private Action addAccount, deleteAccount, refreshAccount, openProject, generateProject, deleteProject;
 	private ViewContentProvider content;
 	private IMemento save;
 	private GMMKeyStore keyStore;
@@ -123,10 +124,10 @@ public class GenMyModelExplorer extends ViewPart {
 			}
 		}
 
-		makeActions();
+		makeActions(parent);
 		contributeToActionBars();
-		doubleClickAction();
-		rightClickAction();
+		doubleClickProjectAction();
+		rightClickProjectAction();
 	}
 
 	private void contributeToActionBars() {
@@ -151,7 +152,7 @@ public class GenMyModelExplorer extends ViewPart {
 		drillDownAdapter.addNavigationActions(manager);
 	}
 
-	private void makeActions() {
+	private void makeActions(final Composite parent) {
 		ImageDescriptor image;
 		refreshAccount = new Action() {
 			public void run() {
@@ -191,7 +192,7 @@ public class GenMyModelExplorer extends ViewPart {
 		image = createImageDescriptor("icons/delete_obj.gif");
 		deleteAccount.setImageDescriptor(image);
 
-		doubleClick = new Action() {
+		openProject = new Action() {
 			public void run() {
 				if (((TreeObject) ((IStructuredSelection) viewer.getSelection())
 						.getFirstElement()).getProject() != null) {
@@ -219,15 +220,23 @@ public class GenMyModelExplorer extends ViewPart {
 			}
 		};
 
-		rightClick = new Action() {
+		generateProject = new Action() {
 			public void run() {
 				GenerationDialog dialog = new GenerationDialog(viewer, client);
 				dialog.open();
-				generation(dialog.getGenerator(), dialog.getDestination());
-
+				generateProject(dialog.getGenerator(), dialog.getDestination());
 			}
 		};
-		rightClick.setText("Generate");
+		generateProject.setText("Generate");
+
+		deleteProject = new Action() {
+			public void run() {
+				if (MessageDialog.openConfirm(parent.getShell(), "Deleting project", "Are you sure you want to delete this project ?")) {
+					deleteProject();
+				}
+			}
+		};
+		deleteProject.setText("Delete");
 	}
 	
 	protected void refreshAccounts() {
@@ -298,12 +307,23 @@ public class GenMyModelExplorer extends ViewPart {
 			keyStore.removeCredential(account);
 		}
 	}
-
-	private void generation(CustomGeneratorBinding generator, String destination) {
-		ProjectBinding project = ((TreeObject) ((IStructuredSelection) viewer
-				.getSelection()).getFirstElement()).getProject();
+	
+	private void deleteProject() {
 		GMMCredential credential = ((TreeObject) ((IStructuredSelection) viewer
 				.getSelection()).getFirstElement()).getCredential();
+		String projectID = ((TreeObject) ((IStructuredSelection) viewer
+				.getSelection()).getFirstElement()).getProject().getProjectId();
+		client.DELETEProject(credential, projectID);
+		TreeObject item = (TreeObject) ((IStructuredSelection) viewer.getSelection()).getFirstElement();
+		item.getParent().removeChild(item);
+		viewer.refresh();
+	}
+
+	private void generateProject(CustomGeneratorBinding generator, String destination) {
+		GMMCredential credential = ((TreeObject) ((IStructuredSelection) viewer
+				.getSelection()).getFirstElement()).getCredential();
+		ProjectBinding project = ((TreeObject) ((IStructuredSelection) viewer
+				.getSelection()).getFirstElement()).getProject();
 		if(generator != null && destination != null) {
 			try {
 				// Copy from github
@@ -377,15 +397,15 @@ public class GenMyModelExplorer extends ViewPart {
 		return zipFile;
 	}
 
-	private void doubleClickAction() {
+	private void doubleClickProjectAction() {
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
-				doubleClick.run();
+				openProject.run();
 			}
 		});
 	}
 
-	private void rightClickAction() {
+	private void rightClickProjectAction() {
 		MenuManager menuMgr = new MenuManager("#PopupMenu");
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
@@ -402,7 +422,8 @@ public class GenMyModelExplorer extends ViewPart {
 		manager.add(new Separator());
 		if (((TreeObject) ((IStructuredSelection) viewer.getSelection())
 				.getFirstElement()).getProject() != null) {
-			manager.add(rightClick);
+			manager.add(generateProject);
+			manager.add(deleteProject);
 		}
 	}
 
