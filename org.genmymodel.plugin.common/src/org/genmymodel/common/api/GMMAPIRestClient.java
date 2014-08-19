@@ -43,7 +43,7 @@ public class GMMAPIRestClient {
 	public static final String COMPILE_RESTURL = REAL_API + "/customgenerators/dev/compile";
 	public static final String EXEC_RESTURL_FRAG = REAL_API + "/customgenerators/dev/execute/";
 	public static final String USER_IMPORTED_PROJECT = REAL_API + "/projects/import";
-	public static final String PROJECT_XMI = REAL_API + USER_PROJECT + "/xmi";
+	public static final String PROJECT_XMI = USER_PROJECT + "/xmi";
 	private static final String CLIENT_ID = "test";
 	private static final String CLIENT_SECRET = "test";
 
