@@ -13,7 +13,6 @@ import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.widgets.Composite;
 import org.genmymodel.common.api.GMMAPIRestClient;
-import org.genmymodel.common.api.ProjectBinding;
 import org.genmymodel.common.api.ProjectPostBinding;
 import org.springframework.http.ResponseEntity;
 
