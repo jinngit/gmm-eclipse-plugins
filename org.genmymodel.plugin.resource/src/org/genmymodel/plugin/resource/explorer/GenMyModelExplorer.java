@@ -182,8 +182,9 @@ public class GenMyModelExplorer extends ViewPart {
 			public void run() {
 				if (((TreeObject) ((IStructuredSelection) viewer.getSelection())
 						.getFirstElement()) != null) {
-					removeAccount(((IStructuredSelection) viewer.getSelection())
-							.getFirstElement().toString());
+					if (MessageDialog.openConfirm(parent.getShell(), "Deleting account", "Are you sure you want to delete this account ?")) {
+						removeAccount(((IStructuredSelection) viewer.getSelection()).getFirstElement().toString());
+					}
 				}
 			}
 		};
