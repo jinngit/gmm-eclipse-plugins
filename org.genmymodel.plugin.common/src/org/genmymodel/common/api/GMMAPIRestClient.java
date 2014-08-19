@@ -34,15 +34,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  *
  */
 public class GMMAPIRestClient {
-	public static final String REAL_API = "https://apipreprodks.genmymodel.com";
+	public static final String REAL_API = "https://api.genmymodel.com";//apipreprodks
 	public static final String OAUTH_TOK = REAL_API  + "/oauth/token";
 	public static final String USER_PROJECTS = REAL_API + "/users/{username}/projects";
+	public static final String USER_PROJECT = REAL_API + "/projects/{projectID}";
 	public static final String USER_SHARED_PROJECTS = REAL_API + "/projects/shared";
 	public static final String USER_CUSTOMGENERATORS = REAL_API + "/customgenerators";
 	public static final String COMPILE_RESTURL = REAL_API + "/customgenerators/dev/compile";
 	public static final String EXEC_RESTURL_FRAG = REAL_API + "/customgenerators/dev/execute/";
 	public static final String USER_IMPORTED_PROJECT = REAL_API + "/projects/import";
-	public static final String PROJECT_XMI = REAL_API + "/projects/{projectID}/xmi";
+	public static final String PROJECT_XMI = REAL_API + USER_PROJECT + "/xmi";
 	private static final String CLIENT_ID = "test";
 	private static final String CLIENT_SECRET = "test";
 
@@ -128,12 +129,22 @@ public class GMMAPIRestClient {
 	 */
 	public ResponseEntity<ProjectPostBinding> POSTImportedProject(GMMCredential credential, ProjectPostBinding project) {
 		try {
-			ResponseEntity<ProjectPostBinding> res = createOAuthTemplate(credential).postForEntity(USER_IMPORTED_PROJECT, project, ProjectPostBinding.class);
-			return res;			
+			ResponseEntity<ProjectPostBinding> response = createOAuthTemplate(credential).postForEntity(USER_IMPORTED_PROJECT, project, ProjectPostBinding.class);
+			return response;			
 		} catch (HttpStatusCodeException e) {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	/**
+	 * Calls the GenMyModel API in order to delete the user project.
+	 * @param credential The user credential.
+	 * @param projectId the project ID.
+	 */
+	public void DELETEProject(GMMCredential credential, String projectID)
+	{
+		createOAuthTemplate(credential).delete(USER_PROJECT, projectID);
 	}
 
 	/**
