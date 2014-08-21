@@ -127,8 +127,13 @@ public class GMMRunconfigTab extends AbstractLaunchConfigurationTab {
 		}
 
 		Composite compositeCredential = new Composite(modelSelection, SWT.NULL);
-		compositeCredential.setLayout(new GridLayout(5, false));
+		GridLayout gridLayout = new GridLayout(5, false);
+		gridLayout.horizontalSpacing = 10;
+		compositeCredential.setLayout(gridLayout);
 
+		final GridData gridData = new GridData();
+		gridData.widthHint = 100;
+	    
 		final Label l1 = new Label(compositeCredential, SWT.RIGHT);
 		l1.setText("Login: ");
 		login = new Text(compositeCredential, SWT.BORDER | SWT.SINGLE);
@@ -138,10 +143,10 @@ public class GMMRunconfigTab extends AbstractLaunchConfigurationTab {
 				updateLaunchConfigurationDialog();
 			}
 		});
-
+		login.setLayoutData(gridData);
+		
 		final Label l2 = new Label(compositeCredential, SWT.RIGHT);
 		l2.setText("Password: ");
-
 		password = new Text(compositeCredential, SWT.PASSWORD | SWT.BORDER | SWT.SINGLE);
 		password.addModifyListener(new ModifyListener() {
 			@Override
@@ -149,9 +154,11 @@ public class GMMRunconfigTab extends AbstractLaunchConfigurationTab {
 				updateLaunchConfigurationDialog();
 			}
 		});
+		password.setLayoutData(gridData);
 
 		refresh = new Button(compositeCredential, SWT.PUSH);
 		refresh.setText("Refresh");
+		refresh.setLayoutData(gridData);
 		refresh.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
