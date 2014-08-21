@@ -37,7 +37,7 @@
             </command>
             <command
                   commandId="org.genmymodel.customgen.launch.command"
-                  label="Launch on..."
+                  label="Launch on... (new run configuration)"
                   style="push">
             </command>
          </menu>
@@ -54,7 +54,7 @@
             </command>
             <command
                   commandId="org.genmymodel.customgen.launch.command"
-                  label="Launch on..."
+                  label="Launch on... (new run configuration)"
                   style="push">
             </command>
          </menu>
