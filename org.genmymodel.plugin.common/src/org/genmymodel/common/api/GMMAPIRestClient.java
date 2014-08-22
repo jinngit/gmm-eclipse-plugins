@@ -40,6 +40,7 @@ public class GMMAPIRestClient {
 	public static final String USER_PROJECT = REAL_API + "/projects/{projectID}";
 	public static final String USER_SHARED_PROJECTS = REAL_API + "/projects/shared";
 	public static final String USER_CUSTOMGENERATORS = REAL_API + "/customgenerators";
+	public static final String USER_CUSTOMGENERATOR = REAL_API + "/customgenerators/{generatorID}";
 	public static final String COMPILE_RESTURL = REAL_API + "/customgenerators/dev/compile";
 	public static final String EXEC_RESTURL_FRAG = REAL_API + "/customgenerators/dev/execute/";
 	public static final String USER_IMPORTED_PROJECT = REAL_API + "/projects/import";
@@ -125,7 +126,7 @@ public class GMMAPIRestClient {
 	 * Calls the GenMyModel API in order to import the user project.
 	 * @param credential The user credential.
 	 * @param project The user project.
-	 * @return A ResponseEntity containing the user project information.
+	 * @return A ResponseEntity containing the user project informations.
 	 */
 	public ResponseEntity<ProjectPostBinding> POSTImportedProject(GMMCredential credential, ProjectPostBinding project) {
 		try {
@@ -136,11 +137,27 @@ public class GMMAPIRestClient {
 			return null;
 		}
 	}
+
+	/**
+	 * Calls the GenMyModel API in order to create a new user custom generator.
+	 * @param credential The user credential.
+	 * @param generator The user generator.
+	 * @return A ResponseEntity containing the user generator informations.
+	 */
+	public ResponseEntity<CustomGeneratorBinding> POSTGenerator(GMMCredential credential, CustomGeneratorBinding generator) {
+		try {
+			ResponseEntity<CustomGeneratorBinding> response = createOAuthTemplate(credential).postForEntity(USER_CUSTOMGENERATORS, generator, CustomGeneratorBinding.class);
+			return response;			
+		} catch (HttpStatusCodeException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 	
 	/**
 	 * Calls the GenMyModel API in order to delete the user project.
 	 * @param credential The user credential.
-	 * @param projectId the project ID.
+	 * @param projectID the project ID.
 	 */
 	public void DELETEProject(GMMCredential credential, String projectID)
 	{
@@ -150,7 +167,7 @@ public class GMMAPIRestClient {
 	/**
 	 * Returns user projects.
 	 * @param credential The user credential.
-	 * @return A tab containing the user project information.
+	 * @return A tab containing the user project informations.
 	 */
 	public ProjectBinding[] GETMyProjects(GMMCredential credential) {
 		return GET(USER_PROJECTS, ProjectBinding[].class, credential, credential.getUsername());
@@ -159,7 +176,7 @@ public class GMMAPIRestClient {
 	/**
 	 * Returns shared user projects.
 	 * @param credential The user credential.
-	 * @return A tab containing the shared user project information.
+	 * @return A tab containing the shared user project informations.
 	 */
 	public ProjectBinding[] GETSharedProjects(GMMCredential credential) {
 		return GET(USER_SHARED_PROJECTS, ProjectBinding[].class, credential, credential.getUsername());
@@ -178,10 +195,20 @@ public class GMMAPIRestClient {
 	/**
 	 * Returns user custom generators.
 	 * @param credential The user credential.
-	 * @return A tab containing the user project information.
+	 * @return A tab containing the user project informations.
 	 */
 	public CustomGeneratorBinding[] GETMyCustomGenerators(GMMCredential credential) {
 		return GET(USER_CUSTOMGENERATORS, CustomGeneratorBinding[].class, credential, credential.getUsername());
+	}
+	
+	/**
+	 * Calls the GenMyModel API in order to delete the user generator.
+	 * @param credential The user credential.
+	 * @param generatorID the generator ID.
+	 */
+	public void DELETEGenerator(GMMCredential credential, Integer generatorID)
+	{
+		createOAuthTemplate(credential).delete(USER_CUSTOMGENERATOR, generatorID);
 	}
 
 	/**
