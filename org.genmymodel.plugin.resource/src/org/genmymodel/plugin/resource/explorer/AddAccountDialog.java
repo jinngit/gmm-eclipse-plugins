@@ -16,11 +16,8 @@ import org.eclipse.swt.widgets.Text;
  * @author Ali Gourch
  */
 public class AddAccountDialog extends TitleAreaDialog {
-	private Text usernameText;
-	private Text passwordText;
-
-	private String username;
-	private String password;
+	private Text usernameInput, passwordInput;
+	private String username, password;
 
 	public AddAccountDialog(Shell parentShell) {
 		super(parentShell);
@@ -57,8 +54,8 @@ public class AddAccountDialog extends TitleAreaDialog {
 		data.grabExcessHorizontalSpace = true;
 		data.horizontalAlignment = GridData.FILL;
 
-		usernameText = new Text(container, SWT.BORDER);
-		usernameText.setLayoutData(data);
+		usernameInput = new Text(container, SWT.BORDER);
+		usernameInput.setLayoutData(data);
 	}
 
 	private void createPassword(Composite container) {
@@ -68,8 +65,8 @@ public class AddAccountDialog extends TitleAreaDialog {
 		GridData data = new GridData();
 		data.grabExcessHorizontalSpace = true;
 		data.horizontalAlignment = GridData.FILL;
-		passwordText = new Text(container, SWT.BORDER | SWT.PASSWORD);
-		passwordText.setLayoutData(data);
+		passwordInput = new Text(container, SWT.BORDER | SWT.PASSWORD);
+		passwordInput.setLayoutData(data);
 	}
 
 	@Override
@@ -77,14 +74,10 @@ public class AddAccountDialog extends TitleAreaDialog {
 		return true;
 	}
 
-	private void saveInput() {
-		username = usernameText.getText();
-		password = passwordText.getText();
-	}
-
 	@Override
 	protected void okPressed() {
-		saveInput();
+		username = usernameInput.getText();
+		password = passwordInput.getText();
 		super.okPressed();
 	}
 
