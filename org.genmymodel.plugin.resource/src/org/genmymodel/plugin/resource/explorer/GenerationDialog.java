@@ -1,8 +1,7 @@
 package org.genmymodel.plugin.resource.explorer;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -18,12 +17,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.statushandlers.StatusManager;
 import org.genmymodel.common.account.GMMCredential;
 import org.genmymodel.common.api.CustomGeneratorBinding;
 import org.genmymodel.common.api.GMMAPIRestClient;
-import org.genmymodel.plugin.resource.Activator;
-import org.springframework.security.oauth2.client.resource.OAuth2AccessDeniedException;
+import org.springframework.http.ResponseEntity;
 
 /**
  * 
@@ -33,9 +30,9 @@ public class GenerationDialog extends TitleAreaDialog {
 	private Combo generatorCombo;
 	private CustomGeneratorBinding generator;
 	private DirectoryDialog destinationDirectory;
-	private Text destinationText;
-	private Button destiontionButton;
+	private Text destinationInput;
 	private String destination;
+	private Button addButton, deleteButton, destiontionButton;
 	private GMMAPIRestClient client;
 	private TreeViewer viewer;
 
@@ -58,17 +55,17 @@ public class GenerationDialog extends TitleAreaDialog {
 		Composite area = (Composite) super.createDialogArea(parent);
 		Composite container = new Composite(area, SWT.NONE);
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
-		GridLayout layout = new GridLayout(3, false);
+		GridLayout layout = new GridLayout(4, false);
 		container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		container.setLayout(layout);
 
-		createGenerators(container);
-		createDestination(container);
+		generators(container);
+		destination(container);
 
 		return area;
 	}
 
-	private void createGenerators(Composite container) {
+	private void generators(final Composite container) {
 		Label label = new Label(container, SWT.NONE);
 		label.setText("Generator");
 
@@ -77,38 +74,67 @@ public class GenerationDialog extends TitleAreaDialog {
 		data.horizontalAlignment = GridData.FILL;
 
 		generatorCombo = new Combo(container, SWT.BORDER | SWT.READ_ONLY);
-		try {
-			GMMCredential credential = ((TreeObject) ((IStructuredSelection) viewer
-					.getSelection()).getFirstElement()).getCredential();
-			CustomGeneratorBinding[] customGenerators = client
-					.GETMyCustomGenerators(credential);
-			for (CustomGeneratorBinding customGenerator : customGenerators) {
-				generatorCombo.add(customGenerator.getName());
-				generatorCombo.setData(customGenerator.getName(),
-						customGenerator);
+		final GMMCredential credential = ((TreeObject) ((IStructuredSelection) viewer
+				.getSelection()).getFirstElement()).getCredential();
+		CustomGeneratorBinding[] customGenerators = client
+				.GETMyCustomGenerators(credential);
+		for (CustomGeneratorBinding customGenerator : customGenerators) {
+			generatorCombo.add(customGenerator.getName());
+			generatorCombo.setData(customGenerator.getName(), customGenerator);
+		}
+		generatorCombo.setLayoutData(data);
+
+		addButton = new Button(container, SWT.BORDER);
+		addButton.setText("    Add    ");
+		addButton.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				AddGeneratorDialog dialog = new AddGeneratorDialog(container.getShell(), client);
+				dialog.open();
+				String name = dialog.getName();
+				String url = dialog.getUrl();
+				String branch = dialog.getBranch();
+				if (name != "" && url != "" && branch != "") {
+					CustomGeneratorBinding customgen = new CustomGeneratorBinding();
+					customgen.setName(name);
+					customgen.setGeneratorURL(url);
+					customgen.setGeneratorBranch(branch);
+					ResponseEntity<CustomGeneratorBinding> result = client.POSTGenerator(credential, customgen);
+					generatorCombo.add(result.getBody().getName());
+					generatorCombo.setData(result.getBody().getName(), result.getBody());
+					generatorCombo.select(generatorCombo.indexOf(result.getBody().getName()));
+				}
 			}
 
-		} catch (OAuth2AccessDeniedException e) {
-			IStatus err = new Status(
-					Status.ERROR,
-					Activator.PLUGIN_ID,
-					Status.ERROR,
-					"Login/password error\n\tPlease verify your information and be sure that you set a passord for your account.",
-					e);
-			StatusManager.getManager().handle(err, StatusManager.BLOCK);
-		}
-		generatorCombo.select(0);
-		generatorCombo.setLayoutData(data);
-		new Label(container, SWT.NONE);
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+
+		deleteButton = new Button(container, SWT.BORDER);
+		deleteButton.setText("    Delete    ");
+		deleteButton.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (MessageDialog.openConfirm(container.getShell(), "Deleting generator", "Are you sure you want to delete this generator ?")) {
+					client.DELETEGenerator(credential, Integer.parseInt(((CustomGeneratorBinding)generatorCombo.getData(generatorCombo.getText())).getGeneratorId()));
+					generatorCombo.remove(generatorCombo.getSelectionIndex());
+				}
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
 	}
 
-	private void createDestination(final Composite container) {
+	private void destination(final Composite container) {
 		Label label = new Label(container, SWT.NONE);
 		label.setText("Destination");
 		label.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false,
 				false));
-		destinationText = new Text(container, SWT.BORDER | SWT.READ_ONLY);
-		destinationText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+		destinationInput = new Text(container, SWT.BORDER | SWT.READ_ONLY);
+		destinationInput.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 				false));
 		destiontionButton = new Button(container, SWT.BORDER);
 		destiontionButton.setText("Browse...");
@@ -120,7 +146,7 @@ public class GenerationDialog extends TitleAreaDialog {
 								| SWT.READ_ONLY);
 				String dir = destinationDirectory.open();
 				if (dir != null) {
-					destinationText.setText(dir);
+					destinationInput.setText(dir);
 				}
 			}
 
@@ -137,15 +163,10 @@ public class GenerationDialog extends TitleAreaDialog {
 		return true;
 	}
 
-	private void saveInput() {
-		generator = (CustomGeneratorBinding) generatorCombo
-				.getData(generatorCombo.getText());
-		destination = destinationText.getText();
-	}
-
 	@Override
 	protected void okPressed() {
-		saveInput();
+		destination = destinationInput.getText();
+		generator = (CustomGeneratorBinding) generatorCombo.getData(generatorCombo.getText());
 		super.okPressed();
 	}
 
