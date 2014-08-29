@@ -14,9 +14,11 @@ import net.lingala.zip4j.util.Zip4jConstants;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.ui.URIEditorInput;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.action.Action;
@@ -75,7 +77,7 @@ public class GenMyModelExplorer extends ViewPart {
 	private ViewContentProvider content;
 	private IMemento save;
 	private GMMKeyStore keyStore;
-
+	
 	/**
 	 * The constructor.
 	 */
@@ -223,7 +225,7 @@ public class GenMyModelExplorer extends ViewPart {
 
 		generateProject = new Action() {
 			public void run() {
-				GenerationDialog dialog = new GenerationDialog(viewer, client);
+				final GenerationDialog dialog = new GenerationDialog(viewer, client);
 				dialog.open();
 				generateProject(dialog.getGenerator(), dialog.getDestination());
 			}
@@ -320,61 +322,74 @@ public class GenMyModelExplorer extends ViewPart {
 		viewer.refresh();
 	}
 
-	private void generateProject(CustomGeneratorBinding generator, String destination) {
-		GMMCredential credential = ((TreeObject) ((IStructuredSelection) viewer
+	private void generateProject(final CustomGeneratorBinding generator, final String destination) {
+		final GMMCredential credential = ((TreeObject) ((IStructuredSelection) viewer
 				.getSelection()).getFirstElement()).getCredential();
-		ProjectBinding project = ((TreeObject) ((IStructuredSelection) viewer
+		final ProjectBinding project = ((TreeObject) ((IStructuredSelection) viewer
 				.getSelection()).getFirstElement()).getProject();
-		if(generator != null && destination != null) {
-			try {
-				// Copy from github
-				File customgen = File.createTempFile("customgen", ".zip");
-				String path = customgen.getParent();
-				String url = generator
-						.getGeneratorURL()
-						.replace(".git", "")
-						.concat("/archive/")
-						.concat((generator.getGeneratorBranch() != "" ? generator
-								.getGeneratorBranch() : "master") + ".zip");
-				FileUtils.copyURLToFile(new URL(url), customgen, 10000, 10000);
-	
-				// Unzip github archive
-				new ZipFile(customgen).extractAll(path + "/customgen");
-				FileUtils.forceDelete(customgen);
-	
-				ZipParameters parameters = new ZipParameters();
-				parameters.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
-				parameters.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
-	
-				// Compile
-				CompilCallResult result = client
-						.POSTCompile(customgen(new File(path + "/customgen"),
-								new ZipFile(path + "/customgen.zip"), parameters)
-								.getFile());
-				new ZipFile(result.zip).extractAll(path + "/customgen");
-				FileUtils.forceDelete(result.zip);
-				new ZipFile(path + "/customgen.zip")
-						.extractAll(path + "/customgen");
-				FileUtils.forceDelete(new File(path + "/customgen.zip"));
-	
-				ZipFile compile = new ZipFile(path + "/customgen.zip");
-				compile.addFolder(path + "/customgen", parameters);
-				FileUtils.forceDelete(new File(path + "/customgen"));
-	
-				// Execute
-				result = client.POSTExec(compile.getFile(), project.getProjectId(),
-						credential);
-				FileUtils.forceDelete(compile.getFile());
-				FileUtils.copyFileToDirectory(result.zip, new File(destination));
-				FileUtils.forceDelete(result.zip);
-			} catch (IOException | ZipException e) {
-				e.printStackTrace();
-			}
+		if(generator != null && destination != null) {			
+				Job job = new Job("Generation ...") {
+					@Override
+					protected IStatus run(IProgressMonitor monitor) {
+						monitor.beginTask("Details ", 100);
+						monitor.subTask("Extracting generator ...");
+						try {
+						// Copy from github
+						File customgen = File.createTempFile("customgen", ".zip");
+						String path = customgen.getParent();
+						String url = generator
+								.getGeneratorURL()
+								.replace(".git", "")
+								.concat("/archive/")
+								.concat((generator.getGeneratorBranch() != "" ? generator
+										.getGeneratorBranch() : "master") + ".zip");
+						FileUtils.copyURLToFile(new URL(url), customgen, 10000, 10000);
+			
+						// Unzip github archive
+						new ZipFile(customgen).extractAll(path + "/customgen");
+						FileUtils.forceDelete(customgen);
+						monitor.worked(30);
+			
+						ZipParameters parameters = new ZipParameters();
+						parameters.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
+						parameters.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
+			
+						// Compile
+						monitor.subTask("Compilation ...");
+						CompilCallResult result = client
+								.POSTCompile(customgen(new File(path + "/customgen"),
+										new ZipFile(path + "/customgen.zip"), parameters)
+										.getFile());
+						new ZipFile(result.zip).extractAll(path + "/customgen");
+						FileUtils.forceDelete(result.zip);
+						new ZipFile(path + "/customgen.zip")
+								.extractAll(path + "/customgen");
+						FileUtils.forceDelete(new File(path + "/customgen.zip"));
+			
+						ZipFile compile = new ZipFile(path + "/customgen.zip");
+						compile.addFolder(path + "/customgen", parameters);
+						FileUtils.forceDelete(new File(path + "/customgen"));
+						monitor.worked(40);
+			
+						// Execute
+						monitor.subTask("Execution ...");
+						result = client.POSTExec(compile.getFile(), project.getProjectId(),
+								credential);
+						FileUtils.forceDelete(compile.getFile());
+						FileUtils.copyFileToDirectory(result.zip, new File(destination));
+						FileUtils.forceDelete(result.zip);
+						} catch (IOException | ZipException e) {
+							e.printStackTrace();
+							return Status.CANCEL_STATUS;
+						}
+						return Status.OK_STATUS;
+					}
+				};
+				job.schedule();			
 		}
 	}
 
-	private ZipFile customgen(File tmp, ZipFile zipFile,
-			ZipParameters parameters) {
+	private ZipFile customgen(File tmp, ZipFile zipFile, ZipParameters parameters) {
 		try {
 			for (File file : tmp.listFiles()) {
 				if (file.getName().equalsIgnoreCase("codegen")
