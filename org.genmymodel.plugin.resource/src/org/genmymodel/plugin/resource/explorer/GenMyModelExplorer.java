@@ -2,6 +2,7 @@ package org.genmymodel.plugin.resource.explorer;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,20 +29,27 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IMemento;
+import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.XMLMemento;
@@ -130,6 +138,93 @@ public class GenMyModelExplorer extends ViewPart {
 		contributeToActionBars();
 		doubleClickProjectAction();
 		rightClickProjectAction();
+		pageProjectAction();
+	}
+	
+	private void pageProjectAction() {
+		IWorkbenchPage page = PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow().getActivePage();
+
+		// adding a listener
+		IPartListener2 pl = new IPartListener2() {
+			public void partClosed(final IWorkbenchPartReference partRef) {
+				BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
+					public void run() {
+						ProgressMonitorDialog dialog = new ProgressMonitorDialog(
+								PlatformUI.getWorkbench()
+										.getActiveWorkbenchWindow().getShell());
+						try {
+							dialog.run(true, false,
+									new IRunnableWithProgress() {
+										public void run(IProgressMonitor monitor) {
+											// monitor.beginTask(null,
+											// IProgressMonitor.UNKNOWN);
+											Display.getDefault().asyncExec(
+													new Runnable() {
+														public void run() {
+															// TODO close the active editor.
+//															PlatformUI
+//																	.getWorkbench()
+//																	.getActiveWorkbenchWindow()
+//																	.getActivePage()
+//																	.getActiveEditor()
+//																	.;
+														}
+													});
+											// monitor.done();
+					}
+							});
+						} catch (InvocationTargetException | InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+
+			@Override
+			public void partActivated(IWorkbenchPartReference partRef) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void partBroughtToTop(IWorkbenchPartReference partRef) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void partDeactivated(IWorkbenchPartReference partRef) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void partOpened(IWorkbenchPartReference partRef) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void partHidden(IWorkbenchPartReference partRef) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void partVisible(IWorkbenchPartReference partRef) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void partInputChanged(IWorkbenchPartReference partRef) {
+				// TODO Auto-generated method stub
+
+			}
+
+		};
+		page.addPartListener(pl);
 	}
 
 	private void contributeToActionBars() {
@@ -199,7 +294,7 @@ public class GenMyModelExplorer extends ViewPart {
 			public void run() {
 				if (((TreeObject) ((IStructuredSelection) viewer.getSelection())
 						.getFirstElement()).getProject() != null) {
-					URIEditorInput input = new URIEditorInput(
+					final URIEditorInput input = new URIEditorInput(
 							URI.createURI("genmymodel://"
 									+ (((TreeObject) ((IStructuredSelection) viewer
 											.getSelection()).getFirstElement()))
@@ -239,7 +334,36 @@ public class GenMyModelExplorer extends ViewPart {
 				}
 			}
 		};
-		deleteProject.setText("Delete");
+		deleteProject.setText("Delete");		
+	}
+	private void openProject(final Action action) {
+		BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
+			public void run() {
+				ProgressMonitorDialog dialog = new ProgressMonitorDialog(
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+								.getShell());
+				try {
+					dialog.run(true, false, new IRunnableWithProgress() {
+						public void run(IProgressMonitor monitor) {
+//							monitor.beginTask(null, IProgressMonitor.UNKNOWN);
+//							try {
+//								Thread.sleep(1000);
+//							} catch (InterruptedException e) {
+//								e.printStackTrace();
+//							}
+							Display.getDefault().asyncExec(new Runnable() {
+								public void run() {
+									action.run();
+								}
+							});
+//							monitor.done();
+						}
+					});
+				} catch (InvocationTargetException | InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 	
 	protected void refreshAccounts() {
@@ -416,7 +540,7 @@ public class GenMyModelExplorer extends ViewPart {
 	private void doubleClickProjectAction() {
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
-				openProject.run();
+				openProject(openProject);
 			}
 		});
 	}
