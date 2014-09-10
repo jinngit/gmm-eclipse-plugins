@@ -11,6 +11,7 @@ import org.genmymodel.common.account.GMMCredential;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +35,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  *
  */
 public class GMMAPIRestClient {
-	public static final String REAL_API = "https://api.genmymodel.com";//apipreprodks
+	public static final String REAL_API = "https://api.genmymodel.com";
 	public static final String OAUTH_TOK = REAL_API  + "/oauth/token";
 	public static final String USER_PROJECTS = REAL_API + "/users/{username}/projects";
 	public static final String USER_PROJECT = REAL_API + "/projects/{projectID}";
@@ -44,6 +45,7 @@ public class GMMAPIRestClient {
 	public static final String COMPILE_RESTURL = REAL_API + "/customgenerators/dev/compile";
 	public static final String EXEC_RESTURL_FRAG = REAL_API + "/customgenerators/dev/execute/";
 	public static final String USER_IMPORTED_PROJECT = REAL_API + "/projects/import";
+	public static final String CUSTOMGEN_CLASSIC_LAUNCH = REAL_API + "/projects/{projectID}/custom/{generatorID}";
 	public static final String PROJECT_XMI = USER_PROJECT + "/xmi";
 	private static final String CLIENT_ID = "test";
 	private static final String CLIENT_SECRET = "test";
@@ -101,6 +103,29 @@ public class GMMAPIRestClient {
 	 */
 	public CompilCallResult POSTExec(File zipArchive, String projectID, GMMCredential credential) throws IOException {
 		return POST(createOAuthTemplate(credential), EXEC_RESTURL_FRAG + projectID, zipArchive);
+	}
+	
+	public CompilCallResult POSTCustomgenLaunch(String projectID, String customgenID, GMMCredential credential) throws IOException {
+		return POST(createOAuthTemplate(credential), CUSTOMGEN_CLASSIC_LAUNCH, projectID, customgenID);
+	}
+	
+	public CompilCallResult POST(RestTemplate template, String url, Object... urlVariables) throws IOException {
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			HttpEntity<String> entity = new HttpEntity<String>("",headers);
+			
+			ResponseEntity<GMMCallResult> res = template.postForEntity(url, entity, GMMCallResult.class, urlVariables);
+			if (res.getBody().getOutputUrl() == null) {
+				return new CompilCallResult(res.getBody(), null);
+			}
+			File tmpZip = File.createTempFile("GMM", ".zip");
+			FileUtils.copyURLToFile(new URL(res.getBody().getOutputUrl()), tmpZip, 10000, 10000);
+			return new CompilCallResult(res.getBody(), tmpZip);
+		} catch (HttpStatusCodeException e) {
+			GMMCallResult call = new ObjectMapper().readValue(e.getResponseBodyAsString(), GMMCallResult.class);
+			return new CompilCallResult(call, null);
+		}
 	}
 
 	private CompilCallResult POST(RestTemplate template, String url, File zipArchive) throws IOException {

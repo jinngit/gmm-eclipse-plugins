@@ -1,5 +1,8 @@
 package org.genmymodel.plugin.resource.explorer;
 
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -14,9 +17,10 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.dialogs.ContainerSelectionDialog;
+import org.eclipse.ui.dialogs.SelectionDialog;
 import org.genmymodel.common.account.GMMCredential;
 import org.genmymodel.common.api.CustomGeneratorBinding;
 import org.genmymodel.common.api.GMMAPIRestClient;
@@ -29,9 +33,8 @@ import org.springframework.http.ResponseEntity;
 public class GenerationDialog extends TitleAreaDialog {
 	private Combo generatorCombo;
 	private CustomGeneratorBinding generator;
-	private DirectoryDialog destinationDirectory;
 	private Text destinationInput;
-	private String destination;
+	private IContainer destination;
 	private Button addButton, deleteButton, destiontionButton;
 	private GMMAPIRestClient client;
 	private TreeViewer viewer;
@@ -141,12 +144,18 @@ public class GenerationDialog extends TitleAreaDialog {
 		destiontionButton.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				destinationDirectory = new DirectoryDialog(
-						container.getShell(), SWT.OPEN | SWT.BORDER
-								| SWT.READ_ONLY);
-				String dir = destinationDirectory.open();
-				if (dir != null) {
-					destinationInput.setText(dir);
+				SelectionDialog dialog = new ContainerSelectionDialog(getParentShell(), ResourcesPlugin.getWorkspace().getRoot(), true, "Select a generation container.");
+				dialog.setTitle("Browse...");
+				dialog.open();
+				if (dialog.getResult() != null && dialog.getResult().length > 0
+						&& dialog.getResult()[0] instanceof IPath) {
+					IPath selectedPath = (IPath)dialog.getResult()[0];
+					destinationInput.setText(selectedPath.toString());
+					if (selectedPath.segmentCount() == 1) {
+						destinationInput.setData(ResourcesPlugin.getWorkspace().getRoot().getProject(selectedPath.lastSegment()));
+					} else {
+						destinationInput.setData(ResourcesPlugin.getWorkspace().getRoot().getContainerForLocation(selectedPath));
+					}
 				}
 			}
 
@@ -165,7 +174,7 @@ public class GenerationDialog extends TitleAreaDialog {
 
 	@Override
 	protected void okPressed() {
-		destination = destinationInput.getText();
+		destination = (IContainer)destinationInput.getData();
 		generator = (CustomGeneratorBinding) generatorCombo.getData(generatorCombo.getText());
 		super.okPressed();
 	}
@@ -174,7 +183,7 @@ public class GenerationDialog extends TitleAreaDialog {
 		return generator;
 	}
 
-	public String getDestination() {
+	public IContainer getDestination() {
 		return destination;
 	}
 }

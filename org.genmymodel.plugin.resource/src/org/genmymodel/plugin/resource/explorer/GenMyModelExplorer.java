@@ -1,22 +1,24 @@
 package org.genmymodel.plugin.resource.explorer;
 
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import net.lingala.zip4j.core.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
-import net.lingala.zip4j.model.ZipParameters;
-import net.lingala.zip4j.util.Zip4jConstants;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
@@ -446,64 +448,41 @@ public class GenMyModelExplorer extends ViewPart {
 		viewer.refresh();
 	}
 
-	private void generateProject(final CustomGeneratorBinding generator, final String destination) {
+	private void generateProject(final CustomGeneratorBinding generator, final IContainer destination) {
 		final GMMCredential credential = ((TreeObject) ((IStructuredSelection) viewer
 				.getSelection()).getFirstElement()).getCredential();
 		final ProjectBinding project = ((TreeObject) ((IStructuredSelection) viewer
 				.getSelection()).getFirstElement()).getProject();
 		if(generator != null && destination != null) {			
-				Job job = new Job("Generation ...") {
+				Job job = new Job("Generation of " + project.getName() + " using " + generator.getName() + "...") {
 					@Override
 					protected IStatus run(IProgressMonitor monitor) {
-						monitor.beginTask("Details ", 100);
-						monitor.subTask("Extracting generator ...");
 						try {
-						// Copy from github
-						File customgen = File.createTempFile("customgen", ".zip");
-						String path = customgen.getParent();
-						String url = generator
-								.getGeneratorURL()
-								.replace(".git", "")
-								.concat("/archive/")
-								.concat((generator.getGeneratorBranch() != "" ? generator
-										.getGeneratorBranch() : "master") + ".zip");
-						FileUtils.copyURLToFile(new URL(url), customgen, 10000, 10000);
-			
-						// Unzip github archive
-						new ZipFile(customgen).extractAll(path + "/customgen");
-						FileUtils.forceDelete(customgen);
-						monitor.worked(30);
-			
-						ZipParameters parameters = new ZipParameters();
-						parameters.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
-						parameters.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
-			
-						// Compile
-						monitor.subTask("Compilation ...");
-						CompilCallResult result = client
-								.POSTCompile(customgen(new File(path + "/customgen"),
-										new ZipFile(path + "/customgen.zip"), parameters)
-										.getFile());
-						new ZipFile(result.zip).extractAll(path + "/customgen");
-						FileUtils.forceDelete(result.zip);
-						new ZipFile(path + "/customgen.zip")
-								.extractAll(path + "/customgen");
-						FileUtils.forceDelete(new File(path + "/customgen.zip"));
-			
-						ZipFile compile = new ZipFile(path + "/customgen.zip");
-						compile.addFolder(path + "/customgen", parameters);
-						FileUtils.forceDelete(new File(path + "/customgen"));
-						monitor.worked(40);
-			
-						// Execute
-						monitor.subTask("Execution ...");
-						result = client.POSTExec(compile.getFile(), project.getProjectId(),
-								credential);
-						FileUtils.forceDelete(compile.getFile());
-						FileUtils.copyFileToDirectory(result.zip, new File(destination));
-						FileUtils.forceDelete(result.zip);
-						} catch (IOException | ZipException e) {
+							CompilCallResult result = GMMAPIRestClient.getInstance().POSTCustomgenLaunch(project.getProjectId(), generator.getGeneratorId(), credential);
+							if (!result.callResult.hasErrors()) {
+								new ZipFile(result.zip).extractAll(destination.getLocation().toFile().getAbsolutePath());
+								destination.refreshLocal(IResource.DEPTH_ONE, monitor);
+								FileUtils.forceDelete(result.zip);
+							} else {
+								MultiStatus err = new MultiStatus(Activator.PLUGIN_ID, Status.ERROR,
+										"Error during code generation", null);
+
+								for (Entry<String, List<String>> entry : result.callResult.getErrors().entrySet()) {
+									MultiStatus lab = new MultiStatus(Activator.PLUGIN_ID,
+											Status.ERROR, entry.getKey(), null);
+									for (String s : entry.getValue()) {
+										lab.add(new Status(Status.ERROR, Activator.PLUGIN_ID,
+												Status.ERROR, s, null));
+									}
+									err.add(lab);
+								}
+
+								StatusManager.getManager().handle(err, StatusManager.SHOW);
+								return Status.CANCEL_STATUS;
+							}
+						} catch (Exception e) {
 							e.printStackTrace();
+							
 							return Status.CANCEL_STATUS;
 						}
 						return Status.OK_STATUS;
@@ -512,31 +491,7 @@ public class GenMyModelExplorer extends ViewPart {
 				job.schedule();			
 		}
 	}
-
-	private ZipFile customgen(File tmp, ZipFile zipFile, ZipParameters parameters) {
-		try {
-			for (File file : tmp.listFiles()) {
-				if (file.getName().equalsIgnoreCase("codegen")
-						|| file.getName().equalsIgnoreCase("metamodels")
-						|| file.getName().equalsIgnoreCase("transformations")
-						|| file.getName().equalsIgnoreCase("generator.xml")) {
-					if (file.isDirectory()) {
-						zipFile.addFolder(file.getAbsoluteFile(), parameters);
-					} else if (file.isFile()) {
-						zipFile.addFile(file.getAbsoluteFile(), parameters);
-					}
-				}
-				if (file.isDirectory()) {
-					customgen(file, zipFile, parameters);
-				}
-			}
-			FileUtils.deleteDirectory(tmp);
-		} catch (ZipException | IOException e) {
-			e.printStackTrace();
-		}
-		return zipFile;
-	}
-
+	
 	private void doubleClickProjectAction() {
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
