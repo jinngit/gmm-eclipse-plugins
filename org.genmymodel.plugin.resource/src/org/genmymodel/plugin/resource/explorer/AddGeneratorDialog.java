@@ -13,8 +13,8 @@ import org.eclipse.swt.widgets.Text;
 import org.genmymodel.common.api.GMMAPIRestClient;
 
 public class AddGeneratorDialog extends TitleAreaDialog {
-	private Text nameInput, urlInput, branchInput;
-	private String name, url, branch;
+	protected Text nameInput, urlInput, branchInput;
+	protected String name, url, branch;
 
 	public AddGeneratorDialog(Shell parent, GMMAPIRestClient client) {
 		super(parent);
@@ -92,5 +92,16 @@ public class AddGeneratorDialog extends TitleAreaDialog {
 
 	public String getBranch() {
 		return branch;
+	}
+	
+	public boolean isValid() {
+		return getUrl() != null 
+				&& !getUrl().trim().isEmpty()
+				&& getName() != null
+				&& !getName().trim().isEmpty();
+	}
+	
+	public boolean hasBranch() {
+		return getBranch() != null && !getBranch().trim().isEmpty();
 	}
 }

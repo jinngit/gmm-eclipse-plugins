@@ -127,6 +127,16 @@ public class GMMAPIRestClient {
 			return new CompilCallResult(call, null);
 		}
 	}
+	public void PUTCustomGen(CustomGeneratorBinding generator, GMMCredential credential) throws IOException {
+		PUT(createOAuthTemplate(credential), USER_CUSTOMGENERATOR, generator, generator.getGeneratorId());
+	}
+	
+	public <T> void PUT(RestTemplate template, String url, T object, Object... urlVariables) throws IOException {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<T> entity = new HttpEntity<T>(object, headers);
+		template.put(url, entity, urlVariables);
+	}
 
 	private CompilCallResult POST(RestTemplate template, String url, File zipArchive) throws IOException {
 		Resource resource = new FileSystemResource(zipArchive);

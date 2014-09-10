@@ -72,6 +72,7 @@ import org.springframework.security.oauth2.client.resource.OAuth2AccessDeniedExc
  * This class manage the explorer views.
  * 
  * @author Ali Gourch
+ * @author Vincent Aranega
  */
 public class GenMyModelExplorer extends ViewPart {
 	/**
