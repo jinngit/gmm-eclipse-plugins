@@ -31,7 +31,7 @@
          point="org.eclipse.emf.ecore.uri_mapping">
       <mapping
             source="pathmap://GENMYMODEL_LIBRARIES/GenMyModelPrimitiveTypes.library.uml"
-            target="https://api.genmymodel.com/projects/GenMyModelPrimitiveTypes.library.uml/xmi">
+            target="platform:/plugin/org.genmymodel.plugin.resource/models/GenMyModelPrimitiveTypes.library.uml">
       </mapping>
    </extension>
   <extension

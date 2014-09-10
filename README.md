@@ -17,9 +17,17 @@ Planned features:
 ### GenMyModel Project Explorer Features
 
 The current features are supported:
-* Multi accounts management (Addition/Suppression from Eclipse, not GenMyModel plateform)
-* Project visibility modification
+* Multi-accounts management (Addition/Suppression from Eclipse, not GenMyModel plateform)
+* Projects visibility modification
+* Projects deletion
+* GenMyModel protocol "genmyodel://_projectID_". This feature allows you to manipulate GenMyModel models into Eclipse EMF applications (in read only mode)
+* Model opening in default UML/EMF tree viewer (in read only mode, model loading can take time)
+* Code generation using registered custom generators in your workspace
+
+Planned features:
 * Project import/export from XMI (using drag/drop)
+* Model modifications
+
 
 ## Installation
 

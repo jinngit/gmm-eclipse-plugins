@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_RB-7oDj5EeSWIoeppx7IKQ" name="GenMyModelPrimitiveTypes">
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_RB-7oTj5EeSWIoeppx7IKQ" name="ByteArray">
+    <eAnnotations xmi:id="_RB-7ojj5EeSWIoeppx7IKQ" source="genmymodel">
+      <details xmi:id="_RB-7ozj5EeSWIoeppx7IKQ" key="uuid" value="bytearray"/>
+    </eAnnotations>
+  </packagedElement>
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_RB-7pDj5EeSWIoeppx7IKQ" name="Char">
+    <eAnnotations xmi:id="_RB-7pTj5EeSWIoeppx7IKQ" source="genmymodel">
+      <details xmi:id="_RB-7pjj5EeSWIoeppx7IKQ" key="uuid" value="char"/>
+    </eAnnotations>
+  </packagedElement>
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_RB-7pzj5EeSWIoeppx7IKQ" name="Date">
+    <eAnnotations xmi:id="_RB-7qDj5EeSWIoeppx7IKQ" source="genmymodel">
+      <details xmi:id="_RB-7qTj5EeSWIoeppx7IKQ" key="uuid" value="date"/>
+    </eAnnotations>
+  </packagedElement>
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_RB-7qjj5EeSWIoeppx7IKQ" name="Real">
+    <eAnnotations xmi:id="_RB-7qzj5EeSWIoeppx7IKQ" source="genmymodel">
+      <details xmi:id="_RB-7rDj5EeSWIoeppx7IKQ" key="uuid" value="real"/>
+    </eAnnotations>
+  </packagedElement>
+  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_RB-7rTj5EeSWIoeppx7IKQ" name="Long">
+    <eAnnotations xmi:id="_RB-7rjj5EeSWIoeppx7IKQ" source="genmymodel">
+      <details xmi:id="_RB-7rzj5EeSWIoeppx7IKQ" key="uuid" value="long"/>
+    </eAnnotations>
+  </packagedElement>
+</uml:Model>
