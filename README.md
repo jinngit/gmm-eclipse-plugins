@@ -37,7 +37,7 @@ Planned features:
 
 __EMF is required__ by the `org.genmymodel.plugin.resource` plugin. It can be installed from the eclipse update site. Acceleo eclipse plugin is not required, but you should install it if you want to code your generator in good conditions.
 
-1. Get the plugin jars (In order to get the compiled jars of the plugins, you can either build them from the source, or you can download them in the release section).
+1. Get the plugin jars (In order to get the compiled jars of the plugins, you can either build them from the source, or you can download them in the [release](https://github.com/Axellience/gmm-eclipse-plugins/releases) section).
 1. Copy the downloaded jars in the `plugins` directory of your elipse installation.
 1. Restart your eclipse if needed.
 
