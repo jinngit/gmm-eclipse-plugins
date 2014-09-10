@@ -14,7 +14,6 @@ import org.genmymodel.common.api.GMMAPIRestClient;
 public class DragListener implements DragSourceListener {
 	private TreeViewer viewer;
 	private File file;
-	private boolean firstTime;
 
 	public DragListener(TreeViewer viewer) {
 		this.viewer = viewer;
@@ -25,17 +24,16 @@ public class DragListener implements DragSourceListener {
 
 	@Override
 	public void dragSetData(DragSourceEvent event) {
-		if (FileTransfer.getInstance().isSupportedType(event.dataType) && firstTime == false) {
+		if (FileTransfer.getInstance().isSupportedType(event.dataType)) {
 			IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 			TreeObject item = ((TreeObject) selection.getFirstElement());
-			String data = GMMAPIRestClient.getInstance().GETProjectXMI(item.getCredential(), item.getProject().getProjectId());
 			try {
+				String data = GMMAPIRestClient.getInstance().GETProjectXMI(item.getCredential(), item.getProject().getProjectId());
 				file = File.createTempFile(item.getName(), ".xmi");
 				FileUtils.writeStringToFile(file, data);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			firstTime = true;
 		}
 		event.data = new String[] {file.getAbsolutePath()};
 	}
@@ -44,7 +42,6 @@ public class DragListener implements DragSourceListener {
 	public void dragFinished(DragSourceEvent event) {
 		try {
 			FileUtils.forceDelete(file);
-			firstTime = false;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -164,13 +164,8 @@ public class GMMAPIRestClient {
 	 * @return A ResponseEntity containing the user project informations.
 	 */
 	public ResponseEntity<ProjectPostBinding> POSTImportedProject(GMMCredential credential, ProjectPostBinding project) {
-		try {
-			ResponseEntity<ProjectPostBinding> response = createOAuthTemplate(credential).postForEntity(USER_IMPORTED_PROJECT, project, ProjectPostBinding.class);
-			return response;			
-		} catch (HttpStatusCodeException e) {
-			e.printStackTrace();
-			return null;
-		}
+		ResponseEntity<ProjectPostBinding> response = createOAuthTemplate(credential).postForEntity(USER_IMPORTED_PROJECT, project, ProjectPostBinding.class);
+		return response;			
 	}
 
 	/**

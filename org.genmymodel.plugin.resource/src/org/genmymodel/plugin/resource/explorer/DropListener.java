@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -14,8 +17,15 @@ import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.widgets.Composite;
 import org.genmymodel.common.api.GMMAPIRestClient;
 import org.genmymodel.common.api.ProjectPostBinding;
+import org.genmymodel.plugin.resource.Activator;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpServerErrorException;
 
+/**
+ * @author Ali Gourch
+ * @author Vincent Aranega
+ *
+ */
 public class DropListener extends ViewerDropAdapter {
 	private Composite parent;
 	private TreeParent target;
@@ -43,12 +53,13 @@ public class DropListener extends ViewerDropAdapter {
 			}
 			File file = new File(s[0]);
 			try {
-				InputDialog input = new InputDialog(parent.getShell(), "Project name", "Please enter the name of your project :", "Project name", new validator());
+				InputDialog input = new InputDialog(parent.getShell(), "Project name", "Please enter the name of your project:", "Project name", new Validator());
 				input.open();
 				ProjectPostBinding project = new ProjectPostBinding();
 				project.setName(input.getValue());
 				project.setPublic(target.getName().equalsIgnoreCase("public"));
 				project.setData(FileUtils.readFileToByteArray(file));
+
 				ResponseEntity<ProjectPostBinding> response = GMMAPIRestClient.getInstance().POSTImportedProject(target.getParent().getCredential(), project);
 				TreeObject child = new TreeObject(project.getName());
 				child.setCredential(target.getParent().getCredential());
@@ -56,8 +67,14 @@ public class DropListener extends ViewerDropAdapter {
 				child.setProject(project);
 				target.addChild(child);
 				viewer.refresh();
+			} catch (HttpServerErrorException e) {
+				IStatus err = new Status(Status.ERROR, Activator.PLUGIN_ID, Status.ERROR, "Please check if it a UML model and it has XMI format.", e);
+				ErrorDialog.openError(parent.getShell(), "Error while importing your model into GenMyModel", "Error while importing your model into GenMyModel", err);
+				return false;
 			} catch (IOException e) {
-				e.printStackTrace();
+				IStatus err = new Status(Status.ERROR, Activator.PLUGIN_ID, Status.ERROR, "Error while reading your model.", e);
+				ErrorDialog.openError(parent.getShell(), "Error while importing your model into GenMyModel", "Error while importing your model into GenMyModel", err);
+				return false;
 			}
 		}		
 		return true;
@@ -76,7 +93,7 @@ public class DropListener extends ViewerDropAdapter {
 	/**
 	 * This class validates a String.
 	 */
-	class validator implements IInputValidator {
+	class Validator implements IInputValidator {
 	  /**
 	   * Validates the String. Returns null for no error, or an error message
 	   * 

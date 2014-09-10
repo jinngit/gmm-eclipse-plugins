@@ -15,6 +15,7 @@ public class ProjectBinding {
 	private String projectId;
 	private boolean _public;
 	
+	
 	/**
 	 * @return the name
 	 */
@@ -51,5 +52,4 @@ public class ProjectBinding {
 	public void setPublic(boolean _public) {
 		this._public = _public;
 	}
-
 }
