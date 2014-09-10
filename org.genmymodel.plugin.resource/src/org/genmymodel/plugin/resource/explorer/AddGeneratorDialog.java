@@ -81,7 +81,7 @@ public class AddGeneratorDialog extends TitleAreaDialog {
 		branch = branchInput.getText();
 		super.okPressed();
 	}
-
+	
 	public String getName() {
 		return name;
 	}

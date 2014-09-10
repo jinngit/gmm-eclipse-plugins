@@ -8,6 +8,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -94,18 +95,21 @@ public class GenerationDialog extends TitleAreaDialog {
 			public void widgetSelected(SelectionEvent e) {
 				AddGeneratorDialog dialog = new AddGeneratorDialog(container.getShell(), client);
 				dialog.open();
-				String name = dialog.getName();
-				String url = dialog.getUrl();
-				String branch = dialog.getBranch();
-				if (name != "" && url != "" && branch != "") {
-					CustomGeneratorBinding customgen = new CustomGeneratorBinding();
-					customgen.setName(name);
-					customgen.setGeneratorURL(url);
-					customgen.setGeneratorBranch(branch);
-					ResponseEntity<CustomGeneratorBinding> result = client.POSTGenerator(credential, customgen);
-					generatorCombo.add(result.getBody().getName());
-					generatorCombo.setData(result.getBody().getName(), result.getBody());
-					generatorCombo.select(generatorCombo.indexOf(result.getBody().getName()));
+				
+				if (dialog.getReturnCode() == Window.OK) {
+					String name = dialog.getName();
+					String url = dialog.getUrl();
+					String branch = dialog.getBranch();
+					if (name != "" && url != "" && branch != "") {
+						CustomGeneratorBinding customgen = new CustomGeneratorBinding();
+						customgen.setName(name);
+						customgen.setGeneratorURL(url);
+						customgen.setGeneratorBranch(branch);
+						ResponseEntity<CustomGeneratorBinding> result = client.POSTGenerator(credential, customgen);
+						generatorCombo.add(result.getBody().getName());
+						generatorCombo.setData(result.getBody().getName(), result.getBody());
+						generatorCombo.select(generatorCombo.indexOf(result.getBody().getName()));
+					}
 				}
 			}
 

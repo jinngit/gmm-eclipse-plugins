@@ -12,9 +12,7 @@ import net.lingala.zip4j.core.ZipFile;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -38,6 +36,7 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.dnd.DND;
@@ -324,7 +323,9 @@ public class GenMyModelExplorer extends ViewPart {
 			public void run() {
 				final GenerationDialog dialog = new GenerationDialog(viewer, client);
 				dialog.open();
-				generateProject(dialog.getGenerator(), dialog.getDestination());
+				if (dialog.getReturnCode() == Window.OK) {
+					generateProject(dialog.getGenerator(), dialog.getDestination());
+				}
 			}
 		};
 		generateProject.setText("Generate");
