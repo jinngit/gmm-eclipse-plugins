@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: GenMyModel Access Ressource
+Bundle-Name: GenMyModel Ressource Access
 Bundle-SymbolicName: org.genmymodel.plugin.resource;singleton:=true
 Bundle-Version: 0.7.0.qualifier
 Bundle-ClassPath: .

@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: GenMyModel Common Plugin Lib for Eclipse
+Bundle-Name: GenMyModel Common Library
 Bundle-SymbolicName: org.genmymodel.plugin.common;singleton:=true
 Bundle-Version: 0.7.0.qualifier
 Bundle-Activator: org.genmymodel.common.Activator
