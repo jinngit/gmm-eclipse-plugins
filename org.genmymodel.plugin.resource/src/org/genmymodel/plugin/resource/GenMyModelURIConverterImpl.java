@@ -51,7 +51,7 @@ public class GenMyModelURIConverterImpl extends ExtensibleURIConverterImpl {
 
 			GMMAPIRestClient client = GMMAPIRestClient.getInstance();
 			GMMKeyStore keyStore = GMMKeyStore.getInstance();
-			return client.GETasInputstream(GMMAPIRestClient.REAL_API + "/projects/" + extractProjectID(uri) + "/data", keyStore.getCurrentCredential());
+			return client.GETasInputstream(GMMAPIRestClient.REAL_API + "/projects/" + extractProjectID(uri) + "/xmi", keyStore.getCurrentCredential());
 		} catch (Exception e) { 
 			e.printStackTrace();
 		}
